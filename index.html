@@ -1,4 +1,4 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -7,10 +7,10 @@
 <style>
 :root{--ink:#241638;--purple:#6b35a8;--bg:#f7f3ff;--card:#fff;--muted:#75697f}
 *{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:var(--ink)}
-header{padding:24px 7%;background:#2d1748;color:#fff}header h1{margin:0 0 6px}
-main{max-width:1000px;margin:30px auto;padding:0 18px}.card{background:var(--card);border-radius:18px;padding:25px;margin:18px 0;box-shadow:0 8px 30px #0001}
-label{display:block;margin:13px 0 6px;font-weight:bold}input,select,button{width:100%;padding:12px;border-radius:10px;border:1px solid #d8cee2;font-size:15px}
-button{background:var(--purple);color:#fff;border:0;font-weight:bold;cursor:pointer;margin-top:17px}
+header{padding:34px 7%;background:linear-gradient(135deg,#241238,#4a216f);color:#fff;text-align:center}header h1{margin:0 0 8px;font-size:38px;letter-spacing:2px}
+main{max-width:1000px;margin:35px auto;padding:0 18px}.card{background:var(--card);border:1px solid #e7dcef;border-radius:20px;padding:28px;margin:20px 0;box-shadow:0 10px 35px rgba(45,23,72,.08)}
+label{display:block;margin:13px 0 6px;font-weight:bold}input,select,button{width:100%;padding:14px;border-radius:10px;border:1px solid #d8cee2;font-size:15px}
+button{background:linear-gradient(135deg,#6b35a8,#8b55c7);color:#fff;border:0;font-weight:bold;cursor:pointer;margin-top:19px;box-shadow:0 6px 16px rgba(107,53,168,.22)}
 .muted{color:var(--muted)}.hidden{display:none}.error{color:#a31515;margin-top:12px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.stat{background:#f4ecfb;border-radius:14px;padding:16px}.stat b{display:block;font-size:20px;margin-top:5px}
 table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #eee}
@@ -18,7 +18,7 @@ table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;bor
 .cell{min-height:95px;background:#faf7fd;border:1px solid #d9cbe7;padding:8px;font-size:12px}
 .cell strong{font-size:13px}.planet{display:inline-block;margin:2px 3px;padding:3px 5px;background:#eee3fa;border-radius:7px}
 .premium{border:2px dashed #9b67c6;background:#fbf7ff}
-footer{text-align:center;padding:25px;color:var(--muted)}
+footer{text-align:center;padding:30px 18px;color:var(--muted);font-size:13px}
 @media(max-width:600px){.chart{grid-template-columns:repeat(2,1fr)}.cell{min-height:80px}}
 </style>
 </head>
@@ -27,7 +27,7 @@ footer{text-align:center;padding:25px;color:var(--muted)}
 <main>
 <section class="card">
 <h2>Create your birth chart</h2>
-<p class="muted">Enter accurate birth details. Version 2 calculates a sidereal Vedic-style chart using the Lahiri ayanamsa.</p>
+<p class="muted">Enter accurate birth details to calculate your sidereal Vedic birth chart using the Lahiri ayanamsa.</p>
 <label>Name</label><input id="name" placeholder="Your name">
 <label>Date of birth</label><input id="dob" type="date">
 <label>Time of birth</label><input id="tob" type="time">
@@ -54,15 +54,15 @@ footer{text-align:center;padding:25px;color:var(--muted)}
 <section id="result" class="hidden">
 <div class="card"><h2 id="welcome"></h2><div class="grid" id="summary"></div></div>
 <div class="card"><h2>&#128302; Planetary positions</h2><table><thead><tr><th>Planet</th><th>Sign</th><th>Degree</th><th>Nakshatra</th><th>House</th></tr></thead><tbody id="planets"></tbody></table></div>
-<div class="card"><h2>🏠 &#127968; Rashi chart</h2><p class="muted">Whole-sign house view for the prototype.</p><div class="chart" id="chart"></div></div>
-<div class="card"><h2>🔮 &#128302; Your first interpretation</h2><div id="reading"></div></div>
+<div class="card"><h2>ðŸ  &#127968; Rashi chart</h2><p class="muted">Whole-sign house view of your calculated birth chart.</p><div class="chart" id="chart"></div></div>
+<div class="card"><h2>ðŸ”® &#128302; Your first interpretation</h2><div id="reading"></div></div>
 <div class="card premium"><h2>&#11088; Premium Astrology Report</h2>
 <p>Unlock a deeper interpretation of your birth chart with personalized astrology insights.</p>
 <div><b>? Career &amp; Profession</b><br><span class="muted">Understand career themes, strengths and professional tendencies.</span></div><br>
 <div><b>?? Money &amp; Wealth</b><br><span class="muted">Explore traditional Vedic indicators related to income, resources and gains.</span></div><br>
 <div><b>?? Love &amp; Relationships</b><br><span class="muted">Explore partnership patterns and relationship themes.</span></div><br>
-<div><b>?? Dasha &amp; Future Periods</b><br><span class="muted">Coming next � planetary period analysis for timing important phases.</span></div><br>
-<div><b>?? Downloadable PDF Report</b><br><span class="muted">Coming next � save your personalized report as a PDF.</span></div><br>
+<div><b>?? Dasha &amp; Future Periods</b><br><span class="muted">Planetary period analysis for timing important phases will be available in an upcoming premium update.</span></div><br>
+<div><b>?? Downloadable PDF Report</b><br><span class="muted">Downloadable personalized PDF reports will be available in an upcoming update.</span></div><br>
 <button onclick="showPremiumOptions()">View Premium Options</button></div>
 </section>
 </main>
@@ -235,7 +235,7 @@ function buildCompleteReport(d){
  const houseAnalysis=Array.from({length:12},(_,i)=>{
    const h=i+1;
    const lord=lordPlanet(h);
-   return `<p><b>House ${h} � ${d.houses[i]}</b><br>
+   return `<p><b>House ${h} — ${d.houses[i]}</b><br>
    Planets: ${housePlanets(h)}.<br>
    House lord: <b>${houseLord(h)}</b>${lord?`, placed in House ${lord.house}`:""}.
    This house is interpreted together with its lord and the planets influencing it.</p>`;
@@ -296,7 +296,7 @@ function buildCompleteReport(d){
  <p>${lordPlacement(5)} ${lordPlacement(9)}</p>
 
  <h3>?? 14. Personalized Overall Reading</h3>
- <p>Your chart is best understood as a connected system: <b>${d.lagna.sign} Ascendant</b>, <b>${moon.sign} Moon</b> in <b>${moon.nakshatra}</b>, the Ascendant lord in House ${ascLord?ascLord.house:"�"}, the 10th-house lord in House ${careerLord?careerLord.house:"�"}, and the 2nd/11th-house financial structure all contribute to the overall picture.</p>
+ <p>Your chart is best understood as a connected system: <b>${d.lagna.sign} Ascendant</b>, <b>${moon.sign} Moon</b> in <b>${moon.nakshatra}</b>, the Ascendant lord in House ${ascLord?ascLord.house:"—"}, the 10th-house lord in House ${careerLord?careerLord.house:"—"}, and the 2nd/11th-house financial structure all contribute to the overall picture.</p>
  <p>The strongest themes should be judged from repeated connections between houses, their lords and planets rather than from one isolated placement. This is also why the next level of analysis requires planetary periods and timing.</p>
 
  <h3>?? What the ?199 Premium Report Adds</h3>
@@ -356,6 +356,9 @@ if(choice === "2"){
   }
 }</script>
 </body></html>
+
+
+
 
 
 
