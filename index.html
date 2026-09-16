@@ -1,9 +1,9 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>AI Vedic Astrologer &mdash; Version 2</title>
+<title>NAKSHIRA &mdash; AI-Powered Vedic Astrology</title>
 <style>
 :root{--ink:#241638;--purple:#6b35a8;--bg:#f7f3ff;--card:#fff;--muted:#75697f}
 *{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:var(--ink)}
@@ -23,7 +23,7 @@ footer{text-align:center;padding:25px;color:var(--muted)}
 </style>
 </head>
 <body>
-<header><h1>&#10024; AI Vedic Astrologer</h1><div>Version 2 &mdash; Vedic chart calculation prototype</div></header>
+<header><h1>&#10024; NAKSHIRA</h1><div>AI-Powered Vedic Astrology</div></header>
 <main>
 <section class="card">
 <h2>Create your birth chart</h2>
@@ -54,15 +54,15 @@ footer{text-align:center;padding:25px;color:var(--muted)}
 <section id="result" class="hidden">
 <div class="card"><h2 id="welcome"></h2><div class="grid" id="summary"></div></div>
 <div class="card"><h2>&#128302; Planetary positions</h2><table><thead><tr><th>Planet</th><th>Sign</th><th>Degree</th><th>Nakshatra</th><th>House</th></tr></thead><tbody id="planets"></tbody></table></div>
-<div class="card"><h2>ðŸ  &#127968; Rashi chart</h2><p class="muted">Whole-sign house view for the prototype.</p><div class="chart" id="chart"></div></div>
-<div class="card"><h2>ðŸ”® &#128302; Your first interpretation</h2><div id="reading"></div></div>
+<div class="card"><h2>🏠 &#127968; Rashi chart</h2><p class="muted">Whole-sign house view for the prototype.</p><div class="chart" id="chart"></div></div>
+<div class="card"><h2>🔮 &#128302; Your first interpretation</h2><div id="reading"></div></div>
 <div class="card premium"><h2>&#11088; Premium Astrology Report</h2>
 <p>Unlock a deeper interpretation of your birth chart with personalized astrology insights.</p>
-<div><b>✨ Career &amp; Profession</b><br><span class="muted">Understand career themes, strengths and professional tendencies.</span></div><br>
-<div><b>💰 Money &amp; Wealth</b><br><span class="muted">Explore traditional Vedic indicators related to income, resources and gains.</span></div><br>
-<div><b>❤️ Love &amp; Relationships</b><br><span class="muted">Explore partnership patterns and relationship themes.</span></div><br>
-<div><b>🔮 Dasha &amp; Future Periods</b><br><span class="muted">Coming next — planetary period analysis for timing important phases.</span></div><br>
-<div><b>📄 Downloadable PDF Report</b><br><span class="muted">Coming next — save your personalized report as a PDF.</span></div><br>
+<div><b>? Career &amp; Profession</b><br><span class="muted">Understand career themes, strengths and professional tendencies.</span></div><br>
+<div><b>?? Money &amp; Wealth</b><br><span class="muted">Explore traditional Vedic indicators related to income, resources and gains.</span></div><br>
+<div><b>?? Love &amp; Relationships</b><br><span class="muted">Explore partnership patterns and relationship themes.</span></div><br>
+<div><b>?? Dasha &amp; Future Periods</b><br><span class="muted">Coming next � planetary period analysis for timing important phases.</span></div><br>
+<div><b>?? Downloadable PDF Report</b><br><span class="muted">Coming next � save your personalized report as a PDF.</span></div><br>
 <button onclick="showPremiumOptions()">View Premium Options</button></div>
 </section>
 </main>
@@ -235,80 +235,80 @@ function buildCompleteReport(d){
  const houseAnalysis=Array.from({length:12},(_,i)=>{
    const h=i+1;
    const lord=lordPlanet(h);
-   return `<p><b>House ${h} — ${d.houses[i]}</b><br>
+   return `<p><b>House ${h} � ${d.houses[i]}</b><br>
    Planets: ${housePlanets(h)}.<br>
    House lord: <b>${houseLord(h)}</b>${lord?`, placed in House ${lord.house}`:""}.
    This house is interpreted together with its lord and the planets influencing it.</p>`;
  }).join("");
 
  return `<div class="card premium">
- <h2>⭐ ₹99 Complete Vedic Report</h2>
+ <h2>? ?99 Complete Vedic Report</h2>
 
  <p><b>Personalized Birth Chart Interpretation</b></p>
  <p>This report is generated from the planetary positions calculated for this birth chart. It combines signs, houses, planetary placements and house-lord relationships. Vedic astrology is a traditional interpretive system, so the observations below should be treated as guidance rather than certainty.</p>
 
- <h3>👤 1. Ascendant & Personal Direction</h3>
+ <h3>?? 1. Ascendant & Personal Direction</h3>
  <p>${ascText}</p>
 
- <h3>🌙 2. Moon, Mind & Emotional Nature</h3>
+ <h3>?? 2. Moon, Mind & Emotional Nature</h3>
  <p>${moonText}</p>
  <p>Your Moon Nakshatra is <b>${moon.nakshatra}</b>. Nakshatra analysis adds a finer traditional layer to the Moon's sign and house placement and is especially important when Dasha timing is added in the Premium report.</p>
 
- <h3>☀️ 3. Planet-by-Planet Personalized Interpretation</h3>
+ <h3>?? 3. Planet-by-Planet Personalized Interpretation</h3>
  ${planetInterpretations}
 
- <h3>🏠 4. House-Lord Structure</h3>
+ <h3>?? 4. House-Lord Structure</h3>
  <p>The following section connects each house with its planetary lord rather than looking only at whether a house is occupied.</p>
  ${houseAnalysis}
 
- <h3>💼 5. Career & Profession</h3>
+ <h3>?? 5. Career & Profession</h3>
  <p>${careerText}</p>
  <p>The career picture should therefore be judged from the 10th house, its lord, Saturn, Sun, Ascendant and the houses connected to the 10th lord rather than from the 10th house alone.</p>
 
- <h3>💰 6. Money, Savings & Gains</h3>
+ <h3>?? 6. Money, Savings & Gains</h3>
  <p>${moneyText}</p>
  <p>This does not mean guaranteed financial results. It identifies the traditional chart areas that deserve attention when considering earning capacity, savings habits, networks and gains.</p>
 
- <h3>❤️ 7. Marriage & Relationships</h3>
+ <h3>?? 7. Marriage & Relationships</h3>
  <p>${relationshipText}</p>
  <p>Venus is in <b>${venus.sign}</b>, House ${venus.house}. Together with the 7th-house lord and the condition of the 7th house, this provides a more individualized relationship picture than simply describing the 7th-house sign.</p>
 
- <h3>📚 8. Education, Intelligence & Creativity</h3>
+ <h3>?? 8. Education, Intelligence & Creativity</h3>
  <p>${educationText}</p>
 
- <h3>🌍 9. Fortune, Higher Learning & Long-Distance Matters</h3>
+ <h3>?? 9. Fortune, Higher Learning & Long-Distance Matters</h3>
  <p>Your 9th house is <b>${d.houses[8]}</b> with <b>${housePlanets(9)}</b>. ${lordPlacement(9)} Traditionally, the 9th house is associated with higher learning, mentors, fortune, belief systems, long-distance travel and broader life direction.</p>
 
- <h3>⚕️ 10. Service, Competition & Challenges</h3>
+ <h3>?? 10. Service, Competition & Challenges</h3>
  <p>Your 6th house is <b>${d.houses[5]}</b> with <b>${housePlanets(6)}</b>. ${lordPlacement(6)} The 6th house is traditionally examined for work routines, competition, service, obstacles and the ability to handle demanding circumstances.</p>
 
- <h3>🌍 11. Foreign Connections & Inner Transformation</h3>
+ <h3>?? 11. Foreign Connections & Inner Transformation</h3>
  <p>Your 12th house is <b>${d.houses[11]}</b> with <b>${housePlanets(12)}</b>. ${lordPlacement(12)} Traditionally, the 12th house is associated with foreign environments, expenditure, retreat, sleep, isolation and inward development. Its interpretation should be combined with the 9th house, Rahu and other relevant factors.</p>
 
- <h3>⭐ 12. Chart Strengths & Important Themes</h3>
+ <h3>? 12. Chart Strengths & Important Themes</h3>
  <p>${strengthText}</p>
  <p>${retro.length?`Retrograde planets in this chart include <b>${retro.join(", ")}</b>. Retrogression is traditionally given additional interpretive weight and should be judged according to the planet, house and sign involved.`:"No planets in the calculated chart are marked retrograde apart from the traditional treatment of the lunar nodes."}</p>
 
- <h3>🔗 13. Important Chart Connections</h3>
+ <h3>?? 13. Important Chart Connections</h3>
  <p>${careerConnection}</p>
  <p>${moneyConnection}</p>
  <p>${marriageConnection}</p>
  <p>${lordPlacement(5)} ${lordPlacement(9)}</p>
 
- <h3>🔎 14. Personalized Overall Reading</h3>
- <p>Your chart is best understood as a connected system: <b>${d.lagna.sign} Ascendant</b>, <b>${moon.sign} Moon</b> in <b>${moon.nakshatra}</b>, the Ascendant lord in House ${ascLord?ascLord.house:"—"}, the 10th-house lord in House ${careerLord?careerLord.house:"—"}, and the 2nd/11th-house financial structure all contribute to the overall picture.</p>
+ <h3>?? 14. Personalized Overall Reading</h3>
+ <p>Your chart is best understood as a connected system: <b>${d.lagna.sign} Ascendant</b>, <b>${moon.sign} Moon</b> in <b>${moon.nakshatra}</b>, the Ascendant lord in House ${ascLord?ascLord.house:"�"}, the 10th-house lord in House ${careerLord?careerLord.house:"�"}, and the 2nd/11th-house financial structure all contribute to the overall picture.</p>
  <p>The strongest themes should be judged from repeated connections between houses, their lords and planets rather than from one isolated placement. This is also why the next level of analysis requires planetary periods and timing.</p>
 
- <h3>🔮 What the ₹199 Premium Report Adds</h3>
- <p>The Premium report will add <b>Vimshottari Dasha calculations, planetary-period timing, future-period interpretation and a downloadable PDF report</b>. Those features are intentionally kept separate from this ₹99 report.</p>
+ <h3>?? What the ?199 Premium Report Adds</h3>
+ <p>The Premium report will add <b>Vimshottari Dasha calculations, planetary-period timing, future-period interpretation and a downloadable PDF report</b>. Those features are intentionally kept separate from this ?99 report.</p>
  </div>`;
 }
 function showPremiumOptions(){
   const choice = prompt(
     "Choose your report:\n\n" +
-    "1 = ₹49 Quick Report\n" +
-    "2 = ₹99 Complete Report\n" +
-    "3 = ₹199 Premium Report\n\n" +
+    "1 = ?49 Quick Report\n" +
+    "2 = ?99 Complete Report\n" +
+    "3 = ?199 Premium Report\n\n" +
     "Enter 1, 2 or 3:"
   );
 
@@ -316,27 +316,27 @@ function showPremiumOptions(){
     const r = document.getElementById("reading");
     r.innerHTML += `
       <div class="card premium">
-        <h2>⭐ ₹49 Quick Report</h2>
+        <h2>? ?49 Quick Report</h2>
         <p><b>Personalized Expanded Analysis</b></p>
 
-        <h3>👤 Personality</h3>
+        <h3>?? Personality</h3>
         <p>Your <b>${currentData.lagna.sign} Ascendant</b> shapes your overall personality, confidence and approach to life. You may naturally express the qualities associated with this sign and tend to develop stronger self-awareness as you gain experience.</p>
 
         <p>Your <b>Moon in ${currentData.moon.sign}</b> gives important clues about your emotional nature, thinking patterns and inner responses.</p>
 
-        <h3>💼 Career & Profession</h3>
+        <h3>?? Career & Profession</h3>
         <p>Your chart's career indicators should be considered through the Ascendant, 10th house, its lord and the planets influencing professional matters. The planetary pattern in your chart can indicate areas where your natural abilities may be useful.</p>
 
-        <h3>💰 Money & Wealth</h3>
+        <h3>?? Money & Wealth</h3>
         <p>Financial analysis in Vedic astrology considers the 2nd and 11th houses along with their lords and supporting planetary influences. Your chart provides indicators that can be explored for income, savings and financial development.</p>
 
-        <h3>❤️ Love & Relationships</h3>
+        <h3>?? Love & Relationships</h3>
         <p>The 7th house, its lord, Venus and other relationship indicators are traditionally examined for partnership themes. Your chart can provide insights into your approach to relationships and the qualities you may value in a partner.</p>
 
-        <h3>✨ Quick Summary</h3>
+        <h3>? Quick Summary</h3>
         <p>This Quick Report provides a broader interpretation than the free report, covering your personality, career, money and relationship themes.</p>
 
-        <p><b>Next level:</b> ₹99 Complete Report adds detailed analysis of your houses, planets and Nakshatras.</p>
+        <p><b>Next level:</b> ?99 Complete Report adds detailed analysis of your houses, planets and Nakshatras.</p>
       </div>
     `;
     r.scrollIntoView({behavior:"smooth"});
@@ -348,7 +348,7 @@ if(choice === "2"){
   r.scrollIntoView({behavior:"smooth"});
 }
   if(choice === "3"){
-    alert("₹199 Premium Report will be added after the ₹99 report.");
+    alert("?199 Premium Report will be added after the ?99 report.");
   }
 
   if(choice !== "1" && choice !== "2" && choice !== "3" && choice !== null){
