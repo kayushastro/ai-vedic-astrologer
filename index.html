@@ -60,31 +60,28 @@ function showPremiumOptions(){
 
   if(choice === "1"){
     const r = document.getElementById("reading");
+    const p = currentData.planets;
+    const find = n => p.find(x => x.name === n);
+    const sun=find("Sun"), moon=find("Moon"), mars=find("Mars"), mercury=find("Mercury"), jupiter=find("Jupiter"), venus=find("Venus"), saturn=find("Saturn"), rahu=find("Rahu"), ketu=find("Ketu");
     r.innerHTML += `
       <div class="card premium">
-        <h2>⭐ ₹49 &#8377;49 Quick Report</h2>
-        <p><b>Personalized Expanded Analysis</b></p>
-
-        <h3>🧠 Personality</h3>
-        <p>Your <b>${currentData.lagna.sign} Ascendant</b> shapes your overall personality, confidence and approach to life. You may naturally express the qualities associated with this sign and tend to develop stronger self-awareness as you gain experience.</p>
-
-        <p>Your <b>Moon in ${currentData.moon.sign}</b> gives important clues about your emotional nature, thinking patterns and inner responses.</p>
-
-        <h3>💼 Career & Profession</h3>
-        <p>Your chart's career indicators should be considered through the Ascendant, 10th house, its lord and the planets influencing professional matters. The planetary pattern in your chart can indicate areas where your natural abilities may be useful.</p>
-
-        <h3>💰 Money & Wealth</h3>
-        <p>Financial analysis in Vedic astrology considers the 2nd and 11th houses along with their lords and supporting planetary influences. Your chart provides indicators that can be explored for income, savings and financial development.</p>
-
-        <h3>❤️ Love & Relationships</h3>
-        <p>The 7th house, its lord, Venus and other relationship indicators are traditionally examined for partnership themes. Your chart can provide insights into your approach to relationships and the qualities you may value in a partner.</p>
-
-        <h3>🔮 Quick Summary</h3>
-        <p>This &#8377;49 Quick Report provides a broader interpretation than the free report, covering your personality, career, money and relationship themes.</p>
-
-        <p><b>Next level:</b> ₹99 Complete Report adds detailed analysis of your houses, planets and Nakshatras.</p>
-      </div>
-    `;
+        <h2>&#8377;49 Quick Report</h2>
+        <p><b>Personalized Expanded Analysis for ${currentData.name}</b></p>
+        <h3>&#128100; Personality</h3>
+        <p>Your <b>${currentData.lagna.sign} Ascendant</b> is the foundation of this reading. Mercury is placed in your 1st house in ${mercury.sign}, adding an analytical and communication-oriented influence to your outward approach. Saturn in the 3rd house emphasizes persistence, practical effort and learning through experience.</p>
+        <h3>&#128200; Career & Profession</h3>
+        <p>Your 10th house is <b>${currentData.houses[9]}</b>. Its lord and supporting planets should be considered together rather than judging career from the 10th house alone. Venus in the 11th house can traditionally be examined for networks, gains and opportunities through contacts, while the Sun and Mars in the 12th house add a theme of work connected with expenses, distant places, institutions or behind-the-scenes responsibilities.</p>
+        <h3>&#128176; Money & Wealth</h3>
+        <p>Your 11th house contains <b>Venus in ${venus.sign}</b>, making the gains house an important area for deeper financial analysis. The 2nd house is ${currentData.houses[1]}, so savings and accumulated resources should be assessed through its lord and supporting influences as well.</p>
+        <h3>&#10084;&#65039; Love & Relationships</h3>
+        <p>Your 7th house is <b>${currentData.houses[6]}</b>. Relationship analysis traditionally considers the 7th lord, Venus and the condition of relevant planets. Your Venus in ${venus.sign} provides an additional relationship indicator, but a complete assessment requires the full planetary-period analysis.</p>
+        <h3>&#127807; Mind & Emotions</h3>
+        <p>Your Moon is in <b>${moon.sign}, ${moon.nakshatra}</b>. This placement is traditionally examined for emotional habits, mental focus and the way you process experiences. Jupiter is also in ${jupiter.sign}, creating an important combination for deeper interpretation.</p>
+        <h3>&#128202; Key Chart Highlights</h3>
+        <p><b>Sun:</b> ${sun.sign}, ${sun.degree} - House ${sun.house}<br><b>Moon:</b> ${moon.sign}, ${moon.degree} - House ${moon.house}<br><b>Mars:</b> ${mars.sign}, ${mars.degree} - House ${mars.house}<br><b>Venus:</b> ${venus.sign}, ${venus.degree} - House ${venus.house}<br><b>Saturn:</b> ${saturn.sign}, ${saturn.degree} - House ${saturn.house}<br><b>Rahu:</b> ${rahu.sign}, ${rahu.degree} - House ${rahu.house}</p>
+        <h3>&#11088; Quick Summary</h3>
+        <p>This expanded report is based on your calculated birth chart rather than generic sign descriptions. For a deeper reading, the &#8377;99 Complete Report can examine all houses, planetary relationships and Nakshatra themes in greater detail.</p>
+      </div>`;
     r.scrollIntoView({behavior:"smooth"});
   }
 
@@ -320,7 +317,7 @@ function buildCompleteReport(d){
  }).join("");
 
  return `<div class="card premium">
- <h2>? ?99 Complete Vedic Report</h2>
+ <h2>&#8377;99 Complete Vedic Report</h2>
 
  <p><b>Personalized Birth Chart Interpretation</b></p>
  <p>This report is generated from the planetary positions calculated for this birth chart. It combines signs, houses, planetary placements and house-lord relationships. Vedic astrology is a traditional interpretive system, so the observations below should be treated as guidance rather than certainty.</p>
@@ -377,62 +374,11 @@ function buildCompleteReport(d){
  <p>Your chart is best understood as a connected system: <b>${d.lagna.sign} Ascendant</b>, <b>${moon.sign} Moon</b> in <b>${moon.nakshatra}</b>, the Ascendant lord in House ${ascLord?ascLord.house:"—"}, the 10th-house lord in House ${careerLord?careerLord.house:"—"}, and the 2nd/11th-house financial structure all contribute to the overall picture.</p>
  <p>The strongest themes should be judged from repeated connections between houses, their lords and planets rather than from one isolated placement. This is also why the next level of analysis requires planetary periods and timing.</p>
 
- <h3>?? What the ?199 Premium Report Adds</h3>
- <p>The Premium report will add <b>Vimshottari Dasha calculations, planetary-period timing, future-period interpretation and a downloadable PDF report</b>. Those features are intentionally kept separate from this ?99 report.</p>
+ <h3>?? What the &#8377;199 Premium Report Adds</h3>
+ <p>The Premium report will add <b>Vimshottari Dasha calculations, planetary-period timing, future-period interpretation and a downloadable PDF report</b>. Those features are intentionally kept separate from this &#8377;99 report.</p>
  </div>`;
 }
-function showPremiumOptions(){
-  const choice = prompt(
-    "Choose your report:\n\n" +
-    "1 = ?49 &#8377;49 Quick Report\n" +
-    "2 = ?99 Complete Report\n" +
-    "3 = ?199 Premium Report\n\n" +
-    "Enter 1, 2 or 3:"
-  );
-
-  if(choice === "1"){
-    const r = document.getElementById("reading");
-    r.innerHTML += `
-      <div class="card premium">
-        <h2>? ?49 &#8377;49 Quick Report</h2>
-        <p><b>Personalized Expanded Analysis</b></p>
-
-        <h3>?? Personality</h3>
-        <p>Your <b>${currentData.lagna.sign} Ascendant</b> shapes your overall personality, confidence and approach to life. You may naturally express the qualities associated with this sign and tend to develop stronger self-awareness as you gain experience.</p>
-
-        <p>Your <b>Moon in ${currentData.moon.sign}</b> gives important clues about your emotional nature, thinking patterns and inner responses.</p>
-
-        <h3>?? Career & Profession</h3>
-        <p>Your chart's career indicators should be considered through the Ascendant, 10th house, its lord and the planets influencing professional matters. The planetary pattern in your chart can indicate areas where your natural abilities may be useful.</p>
-
-        <h3>?? Money & Wealth</h3>
-        <p>Financial analysis in Vedic astrology considers the 2nd and 11th houses along with their lords and supporting planetary influences. Your chart provides indicators that can be explored for income, savings and financial development.</p>
-
-        <h3>?? Love & Relationships</h3>
-        <p>The 7th house, its lord, Venus and other relationship indicators are traditionally examined for partnership themes. Your chart can provide insights into your approach to relationships and the qualities you may value in a partner.</p>
-
-        <h3>? Quick Summary</h3>
-        <p>This &#8377;49 Quick Report provides a broader interpretation than the free report, covering your personality, career, money and relationship themes.</p>
-
-        <p><b>Next level:</b> ?99 Complete Report adds detailed analysis of your houses, planets and Nakshatras.</p>
-      </div>
-    `;
-    r.scrollIntoView({behavior:"smooth"});
-  }
-
-if(choice === "2"){
-  const r=document.getElementById("reading");
-  r.innerHTML += buildCompleteReport(currentData);
-  r.scrollIntoView({behavior:"smooth"});
-}
-  if(choice === "3"){
-    alert("?199 Premium Report will be added after the ?99 report.");
-  }
-
-  if(choice !== "1" && choice !== "2" && choice !== "3" && choice !== null){
-    alert("Please choose 1, 2 or 3.");
-  }
-}</script>
+</script>
 </body></html>
 
 
