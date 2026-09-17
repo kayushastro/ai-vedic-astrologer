@@ -1,4 +1,4 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -31,22 +31,7 @@ footer{text-align:center;padding:30px 18px;color:var(--muted);font-size:13px}
 <label>Name</label><input id="name" placeholder="Your name">
 <label>Date of birth</label><input id="dob" type="date">
 <label>Time of birth</label><input id="tob" type="time">
-<label>Birth city (India)</label>
-<select id="city">
-<option value="valsad">Valsad, Gujarat</option>
-<option value="ahmedabad">Ahmedabad, Gujarat</option>
-<option value="mumbai">Mumbai, Maharashtra</option>
-<option value="surat">Surat, Gujarat</option>
-<option value="vadodara">Vadodara, Gujarat</option>
-<option value="delhi">Delhi</option>
-<option value="jaipur">Jaipur, Rajasthan</option>
-<option value="pune">Pune, Maharashtra</option>
-<option value="bengaluru">Bengaluru, Karnataka</option>
-<option value="hyderabad">Hyderabad, Telangana</option>
-<option value="chennai">Chennai, Tamil Nadu</option>
-<option value="kolkata">Kolkata, West Bengal</option>
-<option value="rajkot">Rajkot, Gujarat</option>
-</select>
+<label>Birth city</label><input id="citySearch" type="text" placeholder="Search city worldwide..." autocomplete="off"><input id="city" type="hidden" style="display:none"><div id="cityResults" class="city-results"></div>
 <button onclick="calculate()">Calculate my chart</button>
 <div id="error" class="error"></div>
 </section>
@@ -54,23 +39,116 @@ footer{text-align:center;padding:30px 18px;color:var(--muted);font-size:13px}
 <section id="result" class="hidden">
 <div class="card"><h2 id="welcome"></h2><div class="grid" id="summary"></div></div>
 <div class="card"><h2>&#128302; Planetary positions</h2><table><thead><tr><th>Planet</th><th>Sign</th><th>Degree</th><th>Nakshatra</th><th>House</th></tr></thead><tbody id="planets"></tbody></table></div>
-<div class="card"><h2>ðŸ  &#127968; Rashi chart</h2><p class="muted">Whole-sign house view of your calculated birth chart.</p><div class="chart" id="chart"></div></div>
-<div class="card"><h2>ðŸ”® &#128302; Your first interpretation</h2><div id="reading"></div></div>
+<div class="card"><h2>&#127968; Rashi chart</h2><p class="muted">Whole-sign house view of your calculated birth chart.</p><div class="chart" id="chart"></div></div>
+<div class="card"><h2>&#128302; Your first interpretation</h2><div id="reading"></div></div>
 <div class="card premium"><h2>&#11088; Premium Astrology Report</h2>
 <p>Unlock a deeper interpretation of your birth chart with personalized astrology insights.</p>
-<div><b>? Career &amp; Profession</b><br><span class="muted">Understand career themes, strengths and professional tendencies.</span></div><br>
-<div><b>?? Money &amp; Wealth</b><br><span class="muted">Explore traditional Vedic indicators related to income, resources and gains.</span></div><br>
-<div><b>?? Love &amp; Relationships</b><br><span class="muted">Explore partnership patterns and relationship themes.</span></div><br>
-<div><b>?? Dasha &amp; Future Periods</b><br><span class="muted">Planetary period analysis for timing important phases will be available in an upcoming premium update.</span></div><br>
-<div><b>?? Downloadable PDF Report</b><br><span class="muted">Downloadable personalized PDF reports will be available in an upcoming update.</span></div><br>
-<button onclick="showPremiumOptions()">View Premium Options</button></div>
-</section>
-</main>
-<footer>For informational/entertainment purposes. Astrology is not a substitute for professional medical, legal or financial advice.</footer>
-<script>
-const cities = {"valsad": {"name": "Valsad, Gujarat", "lat": 20.61, "lon": 72.93}, "ahmedabad": {"name": "Ahmedabad, Gujarat", "lat": 23.0225, "lon": 72.5714}, "mumbai": {"name": "Mumbai, Maharashtra", "lat": 19.076, "lon": 72.8777}, "surat": {"name": "Surat, Gujarat", "lat": 21.1702, "lon": 72.8311}, "vadodara": {"name": "Vadodara, Gujarat", "lat": 22.3072, "lon": 73.1812}, "delhi": {"name": "Delhi", "lat": 28.6139, "lon": 77.209}, "jaipur": {"name": "Jaipur, Rajasthan", "lat": 26.9124, "lon": 75.7873}, "pune": {"name": "Pune, Maharashtra", "lat": 18.5204, "lon": 73.8567}, "bengaluru": {"name": "Bengaluru, Karnataka", "lat": 12.9716, "lon": 77.5946}, "hyderabad": {"name": "Hyderabad, Telangana", "lat": 17.385, "lon": 78.4867}, "chennai": {"name": "Chennai, Tamil Nadu", "lat": 13.0827, "lon": 80.2707}, "kolkata": {"name": "Kolkata, West Bengal", "lat": 22.5726, "lon": 88.3639}, "rajkot": {"name": "Rajkot, Gujarat", "lat": 22.3039, "lon": 70.8022}};
-const sel = document.getElementById('city');
-Object.entries(cities).forEach(([k,v])=>{let o=document.createElement('option');o.value=k;o.textContent=v.name;sel.appendChild(o)});
+<div><b>&#128188; Career &amp; Profession</b><br><span class="muted">Understand career themes, strengths and professional tendencies.</span></div><br>
+<div><b>&#128176; Money &amp; Wealth</b><br><span class="muted">Explore traditional Vedic indicators related to income, resources and gains.</span></div><br>
+<div><b>&#10084; Love &amp; Relationships</b><br><span class="muted">Explore partnership patterns and relationship themes.</span></div><br>
+<div><b>&#128302; Dasha &amp; Future Periods</b><br><span class="muted">Planetary period analysis for timing important phases will be available in an upcoming premium update.</span></div><br>
+<div><b>&#128196; Downloadable PDF Report</b><br><span class="muted">Downloadable personalized PDF reports will be available in an upcoming update.</span></div><br>
+<button onclick="showPremiumOptions()">View Premium Options</button></div></section><script>
+function showPremiumOptions(){
+  const choice = prompt(
+    "Choose your report:\n\n" +
+    "1 = ₹49 Quick Report\n" +
+    "2 = ₹99 Complete Report\n" +
+    "3 = ₹199 Premium Report\n\n" +
+    "Enter 1, 2 or 3:"
+  );
+
+  if(choice === "1"){
+    const r = document.getElementById("reading");
+    r.innerHTML += `
+      <div class="card premium">
+        <h2>⭐ ₹49 Quick Report</h2>
+        <p><b>Personalized Expanded Analysis</b></p>
+
+        <h3>🧠 Personality</h3>
+        <p>Your <b>${currentData.lagna.sign} Ascendant</b> shapes your overall personality, confidence and approach to life. You may naturally express the qualities associated with this sign and tend to develop stronger self-awareness as you gain experience.</p>
+
+        <p>Your <b>Moon in ${currentData.moon.sign}</b> gives important clues about your emotional nature, thinking patterns and inner responses.</p>
+
+        <h3>💼 Career & Profession</h3>
+        <p>Your chart's career indicators should be considered through the Ascendant, 10th house, its lord and the planets influencing professional matters. The planetary pattern in your chart can indicate areas where your natural abilities may be useful.</p>
+
+        <h3>💰 Money & Wealth</h3>
+        <p>Financial analysis in Vedic astrology considers the 2nd and 11th houses along with their lords and supporting planetary influences. Your chart provides indicators that can be explored for income, savings and financial development.</p>
+
+        <h3>❤️ Love & Relationships</h3>
+        <p>The 7th house, its lord, Venus and other relationship indicators are traditionally examined for partnership themes. Your chart can provide insights into your approach to relationships and the qualities you may value in a partner.</p>
+
+        <h3>🔮 Quick Summary</h3>
+        <p>This Quick Report provides a broader interpretation than the free report, covering your personality, career, money and relationship themes.</p>
+
+        <p><b>Next level:</b> ₹99 Complete Report adds detailed analysis of your houses, planets and Nakshatras.</p>
+      </div>
+    `;
+    r.scrollIntoView({behavior:"smooth"});
+  }
+
+  if(choice === "2"){
+    const r = document.getElementById("reading");
+    r.innerHTML += buildCompleteReport(currentData);
+    r.scrollIntoView({behavior:"smooth"});
+  }
+
+  if(choice === "3"){
+    alert("₹199 Premium Report will be added after the ₹99 report.");
+  }
+
+  if(choice !== "1" && choice !== "2" && choice !== "3" && choice !== null){
+    alert("Please choose 1, 2 or 3.");
+  }
+}
+
+const citySearch = document.getElementById('citySearch');
+const cityHidden = document.getElementById('city');
+const cityResults = document.getElementById('cityResults');
+let citySearchTimer = null;
+
+citySearch.addEventListener('input', function(){
+    clearTimeout(citySearchTimer);
+    cityHidden.value = '';
+    const q = this.value.trim();
+    cityResults.innerHTML = '';
+
+    if(q.length < 2) return;
+
+    citySearchTimer = setTimeout(async function(){
+        try{
+            const r = await fetch('/api/cities?q=' + encodeURIComponent(q));
+            const results = await r.json();
+
+            cityResults.innerHTML = '';
+
+            results.forEach(function(city){
+                const item = document.createElement('div');
+                item.className = 'city-option';
+                item.textContent = city.name + ', ' + city.country;
+
+                item.addEventListener('click', function(){
+                    citySearch.value = city.name + ', ' + city.country;
+                    cityHidden.value = city.id;
+                    citySearch.value = city.name + ', ' + city.country;
+                    cityResults.innerHTML = '';
+                });
+
+                cityResults.appendChild(item);
+            });
+        }catch(e){
+            cityResults.innerHTML = '<div class="city-option">Unable to search cities.</div>';
+        }
+    }, 250);
+});
+
+document.addEventListener('click', function(e){
+    if(!cityResults.contains(e.target) && e.target !== citySearch){
+        cityResults.innerHTML = '';
+    }
+});
+
 async function calculate(){
  document.getElementById('error').textContent='';
  const payload={name:document.getElementById('name').value.trim()||'Friend',dob:document.getElementById('dob').value,tob:document.getElementById('tob').value,city:document.getElementById('city').value};
@@ -356,6 +434,7 @@ if(choice === "2"){
   }
 }</script>
 </body></html>
+
 
 
 
