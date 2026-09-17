@@ -322,55 +322,55 @@ function buildCompleteReport(d){
  <p><b>Personalized Birth Chart Interpretation</b></p>
  <p>This report is generated from the planetary positions calculated for this birth chart. It combines signs, houses, planetary placements and house-lord relationships. Vedic astrology is a traditional interpretive system, so the observations below should be treated as guidance rather than certainty.</p>
 
- <h3>?? 1. Ascendant & Personal Direction</h3>
+ <h3>&#128202; 1. Ascendant & Personal Direction</h3>
  <p>${ascText}</p>
 
- <h3>?? 2. Moon, Mind & Emotional Nature</h3>
+ <h3>&#128202; 2. Moon, Mind & Emotional Nature</h3>
  <p>${moonText}</p>
  <p>Your Moon Nakshatra is <b>${moon.nakshatra}</b>. Nakshatra analysis adds a finer traditional layer to the Moon's sign and house placement and is especially important when Dasha timing is added in the Premium report.</p>
 
- <h3>?? 3. Planet-by-Planet Personalized Interpretation</h3>
+ <h3>&#128202; 3. Planet-by-Planet Personalized Interpretation</h3>
  ${planetInterpretations}
 
- <h3>?? 4. House-Lord Structure</h3>
+ <h3>&#128202; 4. House-Lord Structure</h3>
  <p>The following section connects each house with its planetary lord rather than looking only at whether a house is occupied.</p>
  ${houseAnalysis}
 
- <h3>?? 5. Career & Profession</h3>
+ <h3>&#128202; 5. Career & Profession</h3>
  <p>${careerText}</p>
  <p>The career picture should therefore be judged from the 10th house, its lord, Saturn, Sun, Ascendant and the houses connected to the 10th lord rather than from the 10th house alone.</p>
 
- <h3>?? 6. Money, Savings & Gains</h3>
+ <h3>&#128202; 6. Money, Savings & Gains</h3>
  <p>${moneyText}</p>
  <p>This does not mean guaranteed financial results. It identifies the traditional chart areas that deserve attention when considering earning capacity, savings habits, networks and gains.</p>
 
- <h3>?? 7. Marriage & Relationships</h3>
+ <h3>&#128202; 7. Marriage & Relationships</h3>
  <p>${relationshipText}</p>
  <p>Venus is in <b>${venus.sign}</b>, House ${venus.house}. Together with the 7th-house lord and the condition of the 7th house, this provides a more individualized relationship picture than simply describing the 7th-house sign.</p>
 
- <h3>?? 8. Education, Intelligence & Creativity</h3>
+ <h3>&#128202; 8. Education, Intelligence & Creativity</h3>
  <p>${educationText}</p>
 
- <h3>?? 9. Fortune, Higher Learning & Long-Distance Matters</h3>
+ <h3>&#128202; 9. Fortune, Higher Learning & Long-Distance Matters</h3>
  <p>Your 9th house is <b>${d.houses[8]}</b> with <b>${housePlanets(9)}</b>. ${lordPlacement(9)} Traditionally, the 9th house is associated with higher learning, mentors, fortune, belief systems, long-distance travel and broader life direction.</p>
 
- <h3>?? 10. Service, Competition & Challenges</h3>
+ <h3>&#128202; 10. Service, Competition & Challenges</h3>
  <p>Your 6th house is <b>${d.houses[5]}</b> with <b>${housePlanets(6)}</b>. ${lordPlacement(6)} The 6th house is traditionally examined for work routines, competition, service, obstacles and the ability to handle demanding circumstances.</p>
 
- <h3>?? 11. Foreign Connections & Inner Transformation</h3>
+ <h3>&#128202; 11. Foreign Connections & Inner Transformation</h3>
  <p>Your 12th house is <b>${d.houses[11]}</b> with <b>${housePlanets(12)}</b>. ${lordPlacement(12)} Traditionally, the 12th house is associated with foreign environments, expenditure, retreat, sleep, isolation and inward development. Its interpretation should be combined with the 9th house, Rahu and other relevant factors.</p>
 
- <h3>? 12. Chart Strengths & Important Themes</h3>
+ <h3>&#128202; 12. Chart Strengths & Important Themes</h3>
  <p>${strengthText}</p>
  <p>${retro.length?`Retrograde planets in this chart include <b>${retro.join(", ")}</b>. Retrogression is traditionally given additional interpretive weight and should be judged according to the planet, house and sign involved.`:"No planets in the calculated chart are marked retrograde apart from the traditional treatment of the lunar nodes."}</p>
 
- <h3>?? 13. Important Chart Connections</h3>
+ <h3>&#128202; 13. Important Chart Connections</h3>
  <p>${careerConnection}</p>
  <p>${moneyConnection}</p>
  <p>${marriageConnection}</p>
  <p>${lordPlacement(5)} ${lordPlacement(9)}</p>
 
- <h3>?? 14. Personalized Overall Reading</h3>
+ <h3>&#128202; 14. Personalized Overall Reading</h3>
  <p>Your chart is best understood as a connected system: <b>${d.lagna.sign} Ascendant</b>, <b>${moon.sign} Moon</b> in <b>${moon.nakshatra}</b>, the Ascendant lord in House ${ascLord?ascLord.house:"—"}, the 10th-house lord in House ${careerLord?careerLord.house:"—"}, and the 2nd/11th-house financial structure all contribute to the overall picture.</p>
  <p>The strongest themes should be judged from repeated connections between houses, their lords and planets rather than from one isolated placement. This is also why the next level of analysis requires planetary periods and timing.</p>
 
