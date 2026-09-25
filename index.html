@@ -1,54 +1,969 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>NAKSHIRA &mdash; AI-Powered Vedic Astrology</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NAKSHIRA — AI-Powered Vedic Astrology</title>
+
 <style>
-:root{--ink:#241638;--purple:#6b35a8;--bg:#f7f3ff;--card:#fff;--muted:#75697f}
-*{box-sizing:border-box}body{font-family:Arial,sans-serif;margin:0;background:var(--bg);color:var(--ink)}
-header{padding:34px 7%;background:linear-gradient(135deg,#241238,#4a216f);color:#fff;text-align:center}header h1{margin:0 0 8px;font-size:38px;letter-spacing:2px}
-main{max-width:1000px;margin:35px auto;padding:0 18px}.card{background:var(--card);border:1px solid #e7dcef;border-radius:20px;padding:28px;margin:20px 0;box-shadow:0 10px 35px rgba(45,23,72,.08)}
-label{display:block;margin:13px 0 6px;font-weight:bold}input,select,button{width:100%;padding:14px;border-radius:10px;border:1px solid #d8cee2;font-size:15px}
-button{background:linear-gradient(135deg,#6b35a8,#8b55c7);color:#fff;border:0;font-weight:bold;cursor:pointer;margin-top:19px;box-shadow:0 6px 16px rgba(107,53,168,.22)}
-.muted{color:var(--muted)}.hidden{display:none}.error{color:#a31515;margin-top:12px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.stat{background:#f4ecfb;border-radius:14px;padding:16px}.stat b{display:block;font-size:20px;margin-top:5px}
-table{width:100%;border-collapse:collapse}th,td{text-align:left;padding:10px;border-bottom:1px solid #eee}
-.chart{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;max-width:620px;margin:15px auto}
-.cell{min-height:95px;background:#faf7fd;border:1px solid #d9cbe7;padding:8px;font-size:12px}
-.cell strong{font-size:13px}.planet{display:inline-block;margin:2px 3px;padding:3px 5px;background:#eee3fa;border-radius:7px}
-.premium{border:2px dashed #9b67c6;background:#fbf7ff}
-footer{text-align:center;padding:30px 18px;color:var(--muted);font-size:13px}
-@media(max-width:600px){.chart{grid-template-columns:repeat(2,1fr)}.cell{min-height:80px}}
+:root{
+  --bg:#050611;
+  --bg2:#090b1d;
+  --panel:rgba(16,19,42,.72);
+  --panel2:rgba(24,28,58,.58);
+  --line:rgba(255,255,255,.10);
+  --text:#f7f7ff;
+  --muted:#a9aec9;
+  --violet:#8b5cf6;
+  --violet2:#6366f1;
+  --gold:#f5c96a;
+  --cyan:#67e8f9;
+  --success:#6ee7b7;
+  --danger:#fb7185;
+  --shadow:0 25px 80px rgba(0,0,0,.42);
+}
+
+*{box-sizing:border-box}
+
+html{
+  scroll-behavior:smooth;
+}
+
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(circle at 15% 10%,rgba(99,102,241,.20),transparent 30%),
+    radial-gradient(circle at 85% 20%,rgba(139,92,246,.16),transparent 28%),
+    radial-gradient(circle at 50% 85%,rgba(34,211,238,.08),transparent 32%),
+    linear-gradient(145deg,var(--bg),var(--bg2) 55%,#04040c);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.45;
+  background-image:
+    radial-gradient(circle at 20% 30%,rgba(255,255,255,.8) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 70% 60%,rgba(255,255,255,.65) 0 1px,transparent 1.5px),
+    radial-gradient(circle at 40% 80%,rgba(255,255,255,.55) 0 1px,transparent 1.5px);
+  background-size:180px 180px,240px 240px,310px 310px;
+  animation:stars 30s linear infinite;
+}
+
+@keyframes stars{
+  from{transform:translate3d(0,0,0)}
+  to{transform:translate3d(-60px,-40px,0)}
+}
+
+@keyframes float{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-8px)}
+}
+
+@keyframes pulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(139,92,246,.0)}
+  50%{box-shadow:0 0 45px 5px rgba(139,92,246,.16)}
+}
+
+@keyframes reveal{
+  from{opacity:0;transform:translateY(25px)}
+  to{opacity:1;transform:translateY(0)}
+}
+
+@keyframes shimmer{
+  0%{background-position:200% 0}
+  100%{background-position:-200% 0}
+}
+
+header{
+  position:relative;
+  z-index:5;
+  max-width:1180px;
+  margin:0 auto;
+  padding:28px 24px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:13px;
+}
+
+.brand-mark{
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  font-size:20px;
+  background:linear-gradient(135deg,rgba(139,92,246,.95),rgba(99,102,241,.55));
+  box-shadow:0 10px 35px rgba(99,102,241,.30);
+}
+
+.brand-name{
+  font-size:19px;
+  font-weight:800;
+  letter-spacing:.16em;
+}
+
+.brand-sub{
+  color:var(--muted);
+  font-size:11px;
+  margin-top:2px;
+  letter-spacing:.06em;
+}
+
+.header-pill{
+  padding:9px 14px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:rgba(255,255,255,.045);
+  color:#cbd0e9;
+  font-size:12px;
+  backdrop-filter:blur(16px);
+}
+
+main{
+  position:relative;
+  z-index:2;
+  max-width:1180px;
+  margin:0 auto;
+  padding:20px 24px 80px;
+}
+
+.hero{
+  min-height:510px;
+  display:grid;
+  grid-template-columns:1.05fr .95fr;
+  gap:40px;
+  align-items:center;
+  padding:70px 0 55px;
+}
+
+.eyebrow{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid rgba(245,201,106,.25);
+  background:rgba(245,201,106,.06);
+  color:var(--gold);
+  border-radius:999px;
+  padding:8px 13px;
+  font-size:12px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.hero h1{
+  font-size:clamp(46px,6vw,78px);
+  line-height:.98;
+  letter-spacing:-.055em;
+  margin:22px 0;
+  max-width:720px;
+}
+
+.hero h1 span{
+  background:linear-gradient(100deg,#fff 10%,#c4b5fd 48%,#f5c96a 90%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  background-size:200% auto;
+  animation:shimmer 7s linear infinite;
+}
+
+.hero-copy{
+  color:var(--muted);
+  font-size:18px;
+  line-height:1.75;
+  max-width:610px;
+}
+
+.hero-actions{
+  display:flex;
+  gap:13px;
+  flex-wrap:wrap;
+  margin-top:30px;
+}
+
+.hero-meta{
+  display:flex;
+  gap:22px;
+  margin-top:25px;
+  color:#c7cbe0;
+  font-size:12px;
+}
+
+.hero-meta span:before{
+  content:"";
+  display:inline-block;
+  width:6px;
+  height:6px;
+  border-radius:50%;
+  background:var(--success);
+  margin-right:7px;
+  box-shadow:0 0 12px rgba(110,231,183,.7);
+}
+
+.cosmic-orb{
+  position:relative;
+  width:min(420px,80vw);
+  aspect-ratio:1;
+  margin:auto;
+  display:grid;
+  place-items:center;
+  animation:float 7s ease-in-out infinite;
+}
+
+.cosmic-orb:before,
+.cosmic-orb:after{
+  content:"";
+  position:absolute;
+  border-radius:50%;
+  inset:7%;
+  border:1px solid rgba(139,92,246,.25);
+}
+
+.cosmic-orb:after{
+  inset:17%;
+  border-color:rgba(245,201,106,.20);
+  transform:rotate(55deg) scaleX(1.5);
+}
+
+.orb-core{
+  width:48%;
+  aspect-ratio:1;
+  border-radius:50%;
+  background:
+    radial-gradient(circle at 35% 30%,#fff 0 2%,#c4b5fd 7%,#8b5cf6 24%,#312e81 55%,#090a1d 78%);
+  box-shadow:
+    0 0 45px rgba(139,92,246,.55),
+    0 0 130px rgba(99,102,241,.25);
+  animation:pulse 4s ease-in-out infinite;
+}
+
+.orbit{
+  position:absolute;
+  inset:8%;
+  border:1px solid rgba(255,255,255,.09);
+  border-radius:50%;
+  transform:rotate(-18deg) scaleY(.45);
+}
+
+.orbit:nth-child(2){
+  inset:17%;
+  transform:rotate(55deg) scaleY(.42);
+}
+
+.orbit:nth-child(3){
+  inset:0;
+  transform:rotate(112deg) scaleY(.35);
+}
+
+.orbit-dot{
+  position:absolute;
+  width:9px;
+  height:9px;
+  border-radius:50%;
+  background:var(--gold);
+  box-shadow:0 0 18px rgba(245,201,106,.85);
+  top:9%;
+  left:50%;
+}
+
+.card{
+  position:relative;
+  background:linear-gradient(145deg,rgba(20,23,50,.82),rgba(9,11,27,.70));
+  border:1px solid var(--line);
+  border-radius:26px;
+  padding:28px;
+  margin:22px 0;
+  box-shadow:var(--shadow);
+  backdrop-filter:blur(24px);
+  -webkit-backdrop-filter:blur(24px);
+  overflow:hidden;
+}
+
+.card:before{
+  content:"";
+  position:absolute;
+  top:0;
+  left:12%;
+  right:12%;
+  height:1px;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.35),transparent);
+}
+
+.card h2{
+  font-size:24px;
+  letter-spacing:-.025em;
+  margin:0 0 8px;
+}
+
+.card h3{
+  color:#ddd6fe;
+  margin-top:30px;
+}
+
+.muted{
+  color:var(--muted);
+  line-height:1.65;
+}
+
+.form-card{
+  max-width:920px;
+  margin:-5px auto 70px;
+  padding:34px;
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:18px;
+  margin-top:25px;
+}
+
+.field{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.field.full{
+  grid-column:1/-1;
+}
+
+.field label{
+  color:#cdd1e6;
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.04em;
+}
+
+input{
+  width:100%;
+  border:1px solid rgba(255,255,255,.10);
+  outline:none;
+  border-radius:15px;
+  background:rgba(3,5,18,.65);
+  color:white;
+  padding:15px 16px;
+  font-size:15px;
+  transition:.25s ease;
+}
+
+input:focus{
+  border-color:rgba(139,92,246,.75);
+  box-shadow:0 0 0 4px rgba(139,92,246,.10),0 0 30px rgba(139,92,246,.10);
+}
+
+button{
+  border:0;
+  cursor:pointer;
+  color:white;
+  font:inherit;
+  font-weight:750;
+  border-radius:14px;
+  padding:14px 19px;
+  transition:transform .2s ease,box-shadow .2s ease,background .2s ease;
+}
+
+button:hover{
+  transform:translateY(-2px);
+}
+
+.primary-btn{
+  background:linear-gradient(135deg,#8b5cf6,#6366f1);
+  box-shadow:0 12px 35px rgba(99,102,241,.30);
+}
+
+.primary-btn:hover{
+  box-shadow:0 18px 50px rgba(99,102,241,.42);
+}
+
+.secondary-btn{
+  background:rgba(255,255,255,.06);
+  border:1px solid var(--line);
+}
+
+.full-btn{
+  width:100%;
+  margin-top:22px;
+  padding:16px;
+}
+
+.city-results{
+  position:relative;
+  z-index:30;
+  max-height:220px;
+  overflow:auto;
+}
+
+.city-option{
+  padding:12px 14px;
+  background:#11142c;
+  border:1px solid rgba(255,255,255,.06);
+  cursor:pointer;
+}
+
+.city-option:hover{
+  background:#1d2143;
+}
+
+.error{
+  color:#fda4af;
+  margin-top:12px;
+  font-size:13px;
+}
+
+.hidden{
+  display:none!important;
+}
+
+#result{
+  animation:reveal .7s ease both;
+}
+
+#summary{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:14px;
+  margin-top:22px;
+}
+
+.stat{
+  padding:20px;
+  border-radius:19px;
+  border:1px solid var(--line);
+  background:rgba(255,255,255,.035);
+  color:var(--muted);
+  font-size:12px;
+}
+
+.stat b{
+  display:block;
+  color:white;
+  font-size:17px;
+  margin-top:8px;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:18px;
+}
+
+th{
+  color:#aeb4cf;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  text-align:left;
+}
+
+th,td{
+  padding:14px 12px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+td{
+  color:#dce0f2;
+  font-size:14px;
+}
+
+.chart{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+  margin-top:20px;
+}
+
+.chart .cell{
+  min-height:110px;
+  padding:15px;
+  border-radius:17px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.075);
+  transition:.25s ease;
+}
+
+.chart .cell:hover{
+  transform:translateY(-3px);
+  border-color:rgba(139,92,246,.4);
+  background:rgba(139,92,246,.07);
+}
+
+.planet{
+  display:inline-flex;
+  padding:4px 7px;
+  border-radius:7px;
+  background:rgba(139,92,246,.16);
+  color:#ddd6fe;
+  margin:3px 3px 0 0;
+  font-size:11px;
+}
+
+.premium{
+  border-color:rgba(245,201,106,.18);
+  background:
+    radial-gradient(circle at 90% 0%,rgba(245,201,106,.08),transparent 28%),
+    linear-gradient(145deg,rgba(26,23,48,.90),rgba(11,12,27,.78));
+}
+
+.premium h2{
+  color:#f8e5a9;
+}
+
+.premium-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:16px;
+  margin-top:25px;
+}
+
+.price-card{
+  position:relative;
+  padding:25px;
+  border-radius:22px;
+  background:rgba(255,255,255,.035);
+  border:1px solid rgba(255,255,255,.09);
+  transition:.25s ease;
+}
+
+.price-card:hover{
+  transform:translateY(-5px);
+  border-color:rgba(139,92,246,.45);
+  box-shadow:0 20px 60px rgba(0,0,0,.3);
+}
+
+.price-card.featured{
+  border-color:rgba(245,201,106,.42);
+  box-shadow:0 0 45px rgba(245,201,106,.07);
+}
+
+.badge{
+  display:inline-block;
+  padding:5px 9px;
+  border-radius:999px;
+  background:rgba(245,201,106,.12);
+  color:var(--gold);
+  font-size:10px;
+  font-weight:800;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+}
+
+.price{
+  font-size:35px;
+  font-weight:850;
+  margin:14px 0 4px;
+}
+
+.price-card ul{
+  color:var(--muted);
+  padding-left:18px;
+  line-height:1.9;
+  min-height:115px;
+}
+
+.price-card button{
+  width:100%;
+}
+
+.section-label{
+  color:#9299ba;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  margin-bottom:9px;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:100;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  background:rgba(1,2,10,.78);
+  backdrop-filter:blur(14px);
+}
+
+.modal.active{
+  display:flex;
+}
+
+.modal-box{
+  width:min(920px,100%);
+  max-height:90vh;
+  overflow:auto;
+  background:linear-gradient(145deg,#171a38,#090b1c);
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:28px;
+  padding:30px;
+  box-shadow:0 35px 120px rgba(0,0,0,.6);
+  animation:reveal .35s ease both;
+}
+
+.modal-top{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:20px;
+}
+
+.close-btn{
+  width:40px;
+  height:40px;
+  padding:0;
+  border-radius:50%;
+  background:rgba(255,255,255,.07);
+}
+
+footer{
+  position:relative;
+  z-index:2;
+  max-width:1180px;
+  margin:auto;
+  padding:20px 24px 50px;
+  color:#707792;
+  font-size:11px;
+  text-align:center;
+}
+
+@media(max-width:850px){
+  .hero{
+    grid-template-columns:1fr;
+    text-align:center;
+    padding-top:45px;
+  }
+
+  .hero-copy{
+    margin:auto;
+  }
+
+  .hero-actions,.hero-meta{
+    justify-content:center;
+  }
+
+  .cosmic-orb{
+    width:min(330px,80vw);
+  }
+
+  #summary{
+    grid-template-columns:repeat(2,1fr);
+  }
+
+  .premium-grid{
+    grid-template-columns:1fr;
+  }
+
+  .chart{
+    grid-template-columns:repeat(2,1fr);
+  }
+}
+
+@media(max-width:600px){
+  header{
+    padding:20px 16px 10px;
+  }
+
+  .header-pill{
+    display:none;
+  }
+
+  main{
+    padding:10px 14px 60px;
+  }
+
+  .hero{
+    min-height:auto;
+    padding:45px 0 35px;
+  }
+
+  .hero h1{
+    font-size:45px;
+  }
+
+  .hero-copy{
+    font-size:16px;
+  }
+
+  .form-grid{
+    grid-template-columns:1fr;
+  }
+
+  .field.full{
+    grid-column:auto;
+  }
+
+  .form-card,.card{
+    padding:21px;
+    border-radius:21px;
+  }
+
+  #summary{
+    grid-template-columns:1fr 1fr;
+  }
+
+  .chart{
+    grid-template-columns:1fr 1fr;
+  }
+
+  table{
+    display:block;
+    overflow-x:auto;
+    white-space:nowrap;
+  }
+}
 </style>
 </head>
+
 <body>
-<header><h1>&#10024; NAKSHIRA</h1><div>AI-Powered Vedic Astrology</div></header>
+
+<header>
+  <div class="brand">
+    <div class="brand-mark">✦</div>
+    <div>
+      <div class="brand-name">NAKSHIRA</div>
+      <div class="brand-sub">AI-POWERED VEDIC ASTROLOGY</div>
+    </div>
+  </div>
+  <div class="header-pill">SIDEREAL · LAHIRI · VEDIC</div>
+</header>
+
 <main>
-<section class="card">
-<h2>Create your birth chart</h2>
-<p class="muted">Enter accurate birth details to calculate your sidereal Vedic birth chart using the Lahiri ayanamsa.</p>
-<label>Name</label><input id="name" placeholder="Your name">
-<label>Date of birth</label><input id="dob" type="date">
-<label>Time of birth</label><input id="tob" type="time">
-<label>Birth city</label><input id="citySearch" type="text" placeholder="Search city worldwide..." autocomplete="off"><input id="city" type="hidden" style="display:none"><div id="cityResults" class="city-results"></div>
-<button onclick="calculate()">Calculate my chart</button>
-<div id="error" class="error"></div>
+
+<section class="hero">
+  <div>
+    <div class="eyebrow">✦ Your cosmic blueprint</div>
+    <h1>Decode the <span>patterns</span> written in your sky.</h1>
+    <p class="hero-copy">
+      Explore your sidereal Vedic birth chart with planetary positions,
+      Nakshatra insights and personalized Dasha analysis.
+    </p>
+
+    <div class="hero-actions">
+      <button class="primary-btn" onclick="document.getElementById('birthPanel').scrollIntoView({behavior:'smooth'})">
+        Create My Birth Chart →
+      </button>
+      <button class="secondary-btn" onclick="document.getElementById('result').scrollIntoView({behavior:'smooth'})">
+        Explore NAKSHIRA
+      </button>
+    </div>
+
+    <div class="hero-meta">
+      <span>Vedic</span>
+      <span>Sidereal</span>
+      <span>Lahiri</span>
+    </div>
+  </div>
+
+  <div class="cosmic-orb">
+    <div class="orbit"><span class="orbit-dot"></span></div>
+    <div class="orbit"><span class="orbit-dot"></span></div>
+    <div class="orbit"><span class="orbit-dot"></span></div>
+    <div class="orb-core"></div>
+  </div>
+</section>
+
+<section class="card form-card" id="birthPanel">
+  <div class="section-label">01 · Birth data</div>
+  <h2>Create your cosmic profile</h2>
+  <p class="muted">
+    Enter accurate birth details to calculate your sidereal Vedic birth chart using the Lahiri ayanamsa.
+  </p>
+
+  <div class="form-grid">
+    <div class="field">
+      <label>Name</label>
+      <input id="name" placeholder="Your name">
+    </div>
+
+    <div class="field">
+      <label>Date of birth</label>
+      <input id="dob" type="date">
+    </div>
+
+    <div class="field">
+      <label>Time of birth</label>
+      <input id="tob" type="time">
+    </div>
+
+    <div class="field">
+      <label>Birth city</label>
+      <input id="citySearch" type="text" placeholder="Search city worldwide..." autocomplete="off">
+      <input id="city" type="hidden">
+      <div id="cityResults" class="city-results"></div>
+    </div>
+  </div>
+
+  <button class="primary-btn full-btn" onclick="calculate()">
+    Generate My Birth Chart ✦
+  </button>
+
+  <div id="error" class="error"></div>
 </section>
 
 <section id="result" class="hidden">
-<div class="card"><h2 id="welcome"></h2><div class="grid" id="summary"></div></div>
-<div class="card"><h2>&#128302; Planetary positions</h2><table><thead><tr><th>Planet</th><th>Sign</th><th>Degree</th><th>Nakshatra</th><th>House</th></tr></thead><tbody id="planets"></tbody></table></div>
-<div class="card"><h2>&#127968; Rashi chart</h2><p class="muted">Whole-sign house view of your calculated birth chart.</p><div class="chart" id="chart"></div></div>
-<div class="card"><h2>&#128302; Your first interpretation</h2><div id="reading"></div></div>
-<div class="card premium"><h2>&#11088; Premium Astrology Report</h2>
-<p>Unlock a deeper interpretation of your birth chart with personalized astrology insights.</p>
-<div><b>&#128188; Career &amp; Profession</b><br><span class="muted">Understand career themes, strengths and professional tendencies.</span></div><br>
-<div><b>&#128176; Money &amp; Wealth</b><br><span class="muted">Explore traditional Vedic indicators related to income, resources and gains.</span></div><br>
-<div><b>&#10084; Love &amp; Relationships</b><br><span class="muted">Explore partnership patterns and relationship themes.</span></div><br>
-<div><b>&#128302; Dasha &amp; Future Periods</b><br><span class="muted">Personalized Vimshottari Dasha and timing analysis based on your Moon Nakshatra.</span></div><br>
-<div><b>&#128196; Downloadable PDF Report</b><br><span class="muted">Downloadable personalized PDF reports will be available in an upcoming update.</span></div><br>
-<button onclick="showPremiumOptions()">View Premium Options</button></div></section><script>
+
+  <div class="card">
+    <div class="section-label">02 · Cosmic profile</div>
+    <h2 id="welcome"></h2>
+    <div class="grid" id="summary"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">03 · Planetary intelligence</div>
+    <h2>Planetary Positions</h2>
+    <p class="muted">The planetary placements calculated for your birth moment.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Planet</th>
+          <th>Sign</th>
+          <th>Degree</th>
+          <th>Nakshatra</th>
+          <th>House</th>
+        </tr>
+      </thead>
+      <tbody id="planets"></tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <div class="section-label">04 · Birth chart</div>
+    <h2>Rashi Chart</h2>
+    <p class="muted">Whole-sign house view of your calculated birth chart.</p>
+    <div class="chart" id="chart"></div>
+  </div>
+
+  <div class="card">
+    <div class="section-label">05 · Free insight</div>
+    <h2>Your First Interpretation</h2>
+    <div id="reading"></div>
+  </div>
+
+  <div class="card premium">
+    <div class="section-label">06 · Premium intelligence</div>
+    <h2>Go deeper into your chart</h2>
+    <p class="muted">
+      Unlock personalized Vedic interpretations built from your actual birth chart,
+      rather than generic zodiac descriptions.
+    </p>
+
+    <div class="premium-grid">
+
+      <div class="price-card">
+        <div class="section-label">Quick</div>
+        <div class="price">₹49</div>
+        <p>Essential personalized insights.</p>
+        <ul>
+          <li>Personality</li>
+          <li>Career</li>
+          <li>Money</li>
+          <li>Relationships</li>
+        </ul>
+        <button class="secondary-btn" onclick="openReportChooser('quick')">
+          View Quick Report
+        </button>
+      </div>
+
+      <div class="price-card">
+        <div class="section-label">Complete</div>
+        <div class="price">₹99</div>
+        <p>Expanded Vedic interpretation.</p>
+        <ul>
+          <li>All major life areas</li>
+          <li>House-lord structure</li>
+          <li>Planet-by-planet analysis</li>
+          <li>Chart connections</li>
+        </ul>
+        <button class="secondary-btn" onclick="openReportChooser('complete')">
+          View Complete Report
+        </button>
+      </div>
+
+      <div class="price-card featured">
+        <span class="badge">Deep analysis</span>
+        <div class="price">₹199</div>
+        <p>Vimshottari Dasha & timing layer.</p>
+        <ul>
+          <li>Current Mahadasha</li>
+          <li>Current Antardasha</li>
+          <li>Upcoming periods</li>
+          <li>Career & wealth timing</li>
+        </ul>
+        <button class="primary-btn" onclick="openReportChooser('premium')">
+          Unlock Premium
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+</section>
+
+</main>
+
+<footer>
+  NAKSHIRA · AI-Powered Vedic Astrology · For informational and reflective use.
+</footer>
+
+<div class="modal" id="reportModal">
+  <div class="modal-box">
+    <div class="modal-top">
+      <div>
+        <div class="section-label">NAKSHIRA reports</div>
+        <h2>Choose your report</h2>
+        <p class="muted">Select the level of analysis you want to explore.</p>
+      </div>
+      <button class="close-btn" onclick="closeReportChooser()">×</button>
+    </div>
+
+    <div class="premium-grid">
+
+      <div class="price-card">
+        <div class="section-label">Quick Report</div>
+        <div class="price">₹49</div>
+        <p class="muted">A focused personalized reading.</p>
+        <button class="secondary-btn" onclick="selectReport(1)">
+          Continue
+        </button>
+      </div>
+
+      <div class="price-card">
+        <div class="section-label">Complete Report</div>
+        <div class="price">₹99</div>
+        <p class="muted">A deeper chart interpretation.</p>
+        <button class="secondary-btn" onclick="selectReport(2)">
+          Continue
+        </button>
+      </div>
+
+      <div class="price-card featured">
+        <span class="badge">Premium</span>
+        <div class="price">₹199</div>
+        <p class="muted">Dasha and timing analysis.</p>
+        <button class="primary-btn" onclick="selectReport(3)">
+          Continue
+        </button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
 
 function calculateVimshottari(data){
   const nakshatras = [
@@ -368,7 +1283,7 @@ function buildReading(d){
  <p><b>Overall:</b> Your chart contains several layers that can be developed into a much more detailed Vedic astrology report using planetary houses, signs, nakshatras and eventually dasha periods.</p>`;
 }
 function render(d){ currentData = d;
- document.getElementById('welcome').textContent='Welcome, '+d.name+' &#10024;';
+ document.getElementById('welcome').innerHTML='Welcome, '+d.name+' &#10024;';
  const s=document.getElementById('summary');
  s.innerHTML=`<div class="stat">Lagna<b>${d.lagna.sign} ${d.lagna.degree}</b></div>
  <div class="stat">Moon Rashi<b>${d.moon.sign}</b></div>
@@ -566,21 +1481,77 @@ function buildCompleteReport(d){
  </div>`;
 }
 </script>
-</body></html>
+<script>
+function openReportChooser(type){
+  const modal=document.getElementById("reportModal");
+  if(modal) modal.classList.add("active");
+}
 
+function closeReportChooser(){
+  const modal=document.getElementById("reportModal");
+  if(modal) modal.classList.remove("active");
+}
 
+function selectReport(choice){
+  closeReportChooser();
 
+  if(choice === 1 || choice === 2 || choice === 3){
+    showSelectedReport(choice);
+  }
+}
 
+function showSelectedReport(choice){
+  if(typeof currentData === "undefined" || !currentData){
+    alert("Please calculate your birth chart first.");
+    return;
+  }
 
+  const r=document.getElementById("reading");
 
+  if(choice === 1){
+    const p=currentData.planets;
+    const find=n=>p.find(x=>x.name===n);
+    const sun=find("Sun"), moon=find("Moon"), mars=find("Mars"),
+          jupiter=find("Jupiter"), venus=find("Venus"),
+          saturn=find("Saturn"), rahu=find("Rahu");
 
+    r.innerHTML += `
+      <div class="card premium">
+        <div class="section-label">₹49 · Quick Report</div>
+        <h2>Personalized Expanded Analysis</h2>
+        <h3>Personality</h3>
+        <p>Your <b>${currentData.lagna.sign} Ascendant</b> provides the foundation for this reading.</p>
+        <h3>Career & Profession</h3>
+        <p>Your 10th house is <b>${currentData.houses[9]}</b>. Career analysis should consider its lord and supporting planetary connections.</p>
+        <h3>Money & Wealth</h3>
+        <p>Your 11th house contains <b>${venus.sign}</b> Venus. The 2nd and 11th houses are traditionally examined for resources and gains.</p>
+        <h3>Love & Relationships</h3>
+        <p>Your 7th house is <b>${currentData.houses[6]}</b>. Venus provides an additional relationship indicator.</p>
+        <h3>Mind & Emotions</h3>
+        <p>Your Moon is in <b>${moon.sign}, ${moon.nakshatra}</b>.</p>
+        <h3>Key Chart Highlights</h3>
+        <p>
+          <b>Sun:</b> ${sun.sign}, House ${sun.house}<br>
+          <b>Moon:</b> ${moon.sign}, House ${moon.house}<br>
+          <b>Mars:</b> ${mars.sign}, House ${mars.house}<br>
+          <b>Venus:</b> ${venus.sign}, House ${venus.house}<br>
+          <b>Saturn:</b> ${saturn.sign}, House ${saturn.house}<br>
+          <b>Rahu:</b> ${rahu.sign}, House ${rahu.house}
+        </p>
+      </div>`;
+  }
 
+  if(choice === 2){
+    r.innerHTML += buildCompleteReport(currentData);
+  }
 
+  if(choice === 3){
+    r.innerHTML += premiumDashaHTML(currentData);
+  }
 
+  r.scrollIntoView({behavior:"smooth"});
+}
+</script>
 
-
-
-
-
-
-
+</body>
+</html>
