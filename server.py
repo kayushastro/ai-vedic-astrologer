@@ -113,6 +113,19 @@ def create_razorpay_order(report_type):
     }
 
 
+def verify_razorpay_webhook_signature(body, signature):
+    if not RAZORPAY_WEBHOOK_SECRET or not signature:
+        return False
+
+    expected = hmac.new(
+        RAZORPAY_WEBHOOK_SECRET.encode("utf-8"),
+        body,
+        hashlib.sha256
+    ).hexdigest()
+
+    return hmac.compare_digest(expected, signature)
+
+
 def verify_razorpay_payment(order_id, payment_id, signature, report_type):
     if not order_id or not payment_id or not signature:
         raise ValueError("Payment verification data is incomplete.")
@@ -273,6 +286,61 @@ class Handler(BaseHTTPRequestHandler):
                     json.dumps({"error":str(e)}).encode("utf-8"),
                     "application/json; charset=utf-8"
                 )
+            return
+
+        # -------------------------------------------------
+        # Razorpay webhook
+        # -------------------------------------------------
+        if path == "/api/razorpay-webhook":
+            try:
+                n = int(self.headers.get("Content-Length", "0"))
+                body = self.rfile.read(n)
+                signature = self.headers.get(
+                    "X-Razorpay-Signature", ""
+                ).strip()
+
+                if not verify_razorpay_webhook_signature(
+                    body, signature
+                ):
+                    self.send(
+                        400,
+                        json.dumps({
+                            "ok": False,
+                            "error": "Invalid webhook signature"
+                        }).encode(),
+                        "application/json; charset=utf-8"
+                    )
+                    return
+
+                event = json.loads(body.decode("utf-8"))
+                event_name = str(
+                    event.get("event", "")
+                ).strip()
+
+                print(
+                    "Razorpay webhook received:",
+                    event_name
+                )
+
+                self.send(
+                    200,
+                    json.dumps({
+                        "ok": True,
+                        "event": event_name
+                    }).encode(),
+                    "application/json; charset=utf-8"
+                )
+
+            except Exception as e:
+                self.send(
+                    400,
+                    json.dumps({
+                        "ok": False,
+                        "error": str(e)
+                    }).encode(),
+                    "application/json; charset=utf-8"
+                )
+
             return
 
         self.send(404,b"Not found","text/plain")
