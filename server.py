@@ -1,9 +1,173 @@
 import json, math, datetime, os
+import base64
+import hashlib
+import hmac
+import urllib.request
+import urllib.error
 from zoneinfo import ZoneInfo
 import worldcities
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import urlparse, parse_qs
 import swisseph as swe
+
+# ---------------------------------------------------------
+# Razorpay configuration
+# Secrets are supplied through environment variables.
+# Never place the secret in index.html or GitHub.
+# ---------------------------------------------------------
+
+RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID", "").strip()
+RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET", "").strip()
+
+REPORT_PRICES = {
+    "quick": 4900,
+    "complete": 9900,
+    "premium": 19900,
+}
+
+REPORT_NAMES = {
+    "quick": "NAKSHIRA Quick Report",
+    "complete": "NAKSHIRA Complete Report",
+    "premium": "NAKSHIRA Premium Report",
+}
+
+
+def razorpay_auth_header():
+    if not RAZORPAY_KEY_ID or not RAZORPAY_KEY_SECRET:
+        raise ValueError("Razorpay credentials are not configured on the server.")
+
+    token = base64.b64encode(
+        f"{RAZORPAY_KEY_ID}:{RAZORPAY_KEY_SECRET}".encode("utf-8")
+    ).decode("ascii")
+
+    return "Basic " + token
+
+
+def razorpay_request(method, endpoint, payload=None):
+    url = "https://api.razorpay.com/v1" + endpoint
+
+    data = None
+    headers = {
+        "Authorization": razorpay_auth_header(),
+        "Content-Type": "application/json",
+        "User-Agent": "NAKSHIRA/1.0",
+    }
+
+    if payload is not None:
+        data = json.dumps(payload).encode("utf-8")
+
+    request = urllib.request.Request(
+        url,
+        data=data,
+        headers=headers,
+        method=method,
+    )
+
+    try:
+        with urllib.request.urlopen(request, timeout=20) as response:
+            raw = response.read().decode("utf-8")
+            return json.loads(raw)
+
+    except urllib.error.HTTPError as e:
+        raw = e.read().decode("utf-8", errors="replace")
+        try:
+            detail = json.loads(raw)
+        except Exception:
+            detail = {"error": raw}
+
+        raise ValueError(
+            "Razorpay API error: " + json.dumps(detail, ensure_ascii=False)
+        )
+
+
+def create_razorpay_order(report_type):
+    if report_type not in REPORT_PRICES:
+        raise ValueError("Invalid report type.")
+
+    amount = REPORT_PRICES[report_type]
+
+    order = razorpay_request(
+        "POST",
+        "/orders",
+        {
+            "amount": amount,
+            "currency": "INR",
+            "receipt": "nakshira_" + report_type + "_" + datetime.datetime.now(
+                datetime.timezone.utc
+            ).strftime("%Y%m%d%H%M%S"),
+            "notes": {
+                "product": REPORT_NAMES[report_type],
+                "report_type": report_type,
+            },
+        },
+    )
+
+    return {
+        "order_id": order["id"],
+        "amount": order["amount"],
+        "currency": order["currency"],
+        "key_id": RAZORPAY_KEY_ID,
+        "report_type": report_type,
+        "report_name": REPORT_NAMES[report_type],
+    }
+
+
+def verify_razorpay_payment(order_id, payment_id, signature, report_type):
+    if not order_id or not payment_id or not signature:
+        raise ValueError("Payment verification data is incomplete.")
+
+    if report_type not in REPORT_PRICES:
+        raise ValueError("Invalid report type.")
+
+    # Verify Razorpay's checkout signature.
+    message = f"{order_id}|{payment_id}".encode("utf-8")
+
+    expected = hmac.new(
+        RAZORPAY_KEY_SECRET.encode("utf-8"),
+        message,
+        hashlib.sha256,
+    ).hexdigest()
+
+    if not hmac.compare_digest(expected, signature):
+        raise ValueError("Payment signature verification failed.")
+
+    # Retrieve the order from Razorpay rather than trusting the browser.
+    order = razorpay_request("GET", "/orders/" + order_id)
+
+    expected_amount = REPORT_PRICES[report_type]
+
+    if int(order.get("amount", 0)) != expected_amount:
+        raise ValueError("Payment amount does not match the selected report.")
+
+    if order.get("currency") != "INR":
+        raise ValueError("Unexpected payment currency.")
+
+    # Retrieve payment status from Razorpay.
+    payment = razorpay_request("GET", "/payments/" + payment_id)
+
+    if payment.get("order_id") != order_id:
+        raise ValueError("Payment does not belong to this order.")
+
+    if int(payment.get("amount", 0)) != expected_amount:
+        raise ValueError("Payment amount verification failed.")
+
+    if payment.get("currency") != "INR":
+        raise ValueError("Unexpected payment currency.")
+
+    if payment.get("status") != "captured":
+        raise ValueError(
+            "Payment has not been captured yet. Current status: "
+            + str(payment.get("status"))
+        )
+
+    return {
+        "verified": True,
+        "report_type": report_type,
+        "report_name": REPORT_NAMES[report_type],
+        "order_id": order_id,
+        "payment_id": payment_id,
+    }
+
 
 CITIES = {"valsad": {"name": "Valsad, Gujarat", "lat": 20.61, "lon": 72.93, "timezone": "Asia/Kolkata"}, "ahmedabad": {"name": "Ahmedabad, Gujarat", "lat": 23.0225, "lon": 72.5714, "timezone": "Asia/Kolkata"}, "mumbai": {"name": "Mumbai, Maharashtra", "lat": 19.076, "lon": 72.8777, "timezone": "Asia/Kolkata"}, "surat": {"name": "Surat, Gujarat", "lat": 21.1702, "lon": 72.8311, "timezone": "Asia/Kolkata"}, "vadodara": {"name": "Vadodara, Gujarat", "lat": 22.3072, "lon": 73.1812, "timezone": "Asia/Kolkata"}, "delhi": {"name": "Delhi", "lat": 28.6139, "lon": 77.209, "timezone": "Asia/Kolkata"}, "jaipur": {"name": "Jaipur, Rajasthan", "lat": 26.9124, "lon": 75.7873, "timezone": "Asia/Kolkata"}, "pune": {"name": "Pune, Maharashtra", "lat": 18.5204, "lon": 73.8567, "timezone": "Asia/Kolkata"}, "bengaluru": {"name": "Bengaluru, Karnataka", "lat": 12.9716, "lon": 77.5946, "timezone": "Asia/Kolkata"}, "hyderabad": {"name": "Hyderabad, Telangana", "lat": 17.385, "lon": 78.4867, "timezone": "Asia/Kolkata"}, "chennai": {"name": "Chennai, Tamil Nadu", "lat": 13.0827, "lon": 80.2707, "timezone": "Asia/Kolkata"}, "kolkata": {"name": "Kolkata, West Bengal", "lat": 22.5726, "lon": 88.3639, "timezone": "Asia/Kolkata"}, "rajkot": {"name": "Rajkot, Gujarat", "lat": 22.3039, "lon": 70.8022, "timezone": "Asia/Kolkata"}}
 SIGNS = ["Aries","Taurus","Gemini","Cancer","Leo","Virgo","Libra","Scorpio","Sagittarius","Capricorn","Aquarius","Pisces"]
@@ -113,24 +277,93 @@ class Handler(BaseHTTPRequestHandler):
         self.send(404,b"Not found","text/plain")
 
     def do_POST(self):
-        if urlparse(self.path).path!="/api/chart":
-            return self.send(404,b"Not found","text/plain")
+        path = urlparse(self.path).path
 
-        try:
-            n=int(self.headers.get("Content-Length","0"))
-            req=json.loads(self.rfile.read(n))
-            result=chart(req)
-            self.send(
-                200,
-                json.dumps(result).encode(),
-                "application/json; charset=utf-8"
-            )
-        except Exception as e:
-            self.send(
-                400,
-                json.dumps({"error":str(e)}).encode(),
-                "application/json; charset=utf-8"
-            )
+        # -------------------------------------------------
+        # Existing astrology chart endpoint
+        # -------------------------------------------------
+        if path == "/api/chart":
+            try:
+                n = int(self.headers.get("Content-Length", "0"))
+                req = json.loads(self.rfile.read(n))
+                result = chart(req)
+
+                self.send(
+                    200,
+                    json.dumps(result).encode(),
+                    "application/json; charset=utf-8"
+                )
+
+            except Exception as e:
+                self.send(
+                    400,
+                    json.dumps({"error": str(e)}).encode(),
+                    "application/json; charset=utf-8"
+                )
+
+            return
+
+        # -------------------------------------------------
+        # Create Razorpay order
+        # -------------------------------------------------
+        if path == "/api/create-order":
+            try:
+                n = int(self.headers.get("Content-Length", "0"))
+                req = json.loads(self.rfile.read(n))
+
+                report_type = str(req.get("report_type", "")).strip().lower()
+
+                result = create_razorpay_order(report_type)
+
+                self.send(
+                    200,
+                    json.dumps(result).encode(),
+                    "application/json; charset=utf-8"
+                )
+
+            except Exception as e:
+                self.send(
+                    400,
+                    json.dumps({"error": str(e)}).encode(),
+                    "application/json; charset=utf-8"
+                )
+
+            return
+
+        # -------------------------------------------------
+        # Verify Razorpay payment
+        # -------------------------------------------------
+        if path == "/api/verify-payment":
+            try:
+                n = int(self.headers.get("Content-Length", "0"))
+                req = json.loads(self.rfile.read(n))
+
+                result = verify_razorpay_payment(
+                    str(req.get("razorpay_order_id", "")).strip(),
+                    str(req.get("razorpay_payment_id", "")).strip(),
+                    str(req.get("razorpay_signature", "")).strip(),
+                    str(req.get("report_type", "")).strip().lower(),
+                )
+
+                self.send(
+                    200,
+                    json.dumps(result).encode(),
+                    "application/json; charset=utf-8"
+                )
+
+            except Exception as e:
+                self.send(
+                    400,
+                    json.dumps({
+                        "verified": False,
+                        "error": str(e)
+                    }).encode(),
+                    "application/json; charset=utf-8"
+                )
+
+            return
+
+        self.send(404, b"Not found", "text/plain")
 
 if __name__=="__main__":
     port=int(os.environ.get("PORT","8000"))

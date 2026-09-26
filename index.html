@@ -1483,6 +1483,11 @@ function buildCompleteReport(d){
 </script>
 <script>
 function openReportChooser(type){
+  if(typeof currentData === "undefined" || !currentData){
+    alert("Please calculate your birth chart first.");
+    return;
+  }
+
   const modal=document.getElementById("reportModal");
   if(modal) modal.classList.add("active");
 }
@@ -1495,9 +1500,8 @@ function closeReportChooser(){
 function selectReport(choice){
   closeReportChooser();
 
-  if(choice === 1 || choice === 2 || choice === 3){
-    showSelectedReport(choice);
-  }
+  const reportType=choice===1?"quick":choice===2?"complete":choice===3?"premium":null;
+  if(reportType) startRazorpayPayment(reportType);
 }
 
 function showSelectedReport(choice){
@@ -1553,5 +1557,90 @@ function showSelectedReport(choice){
 }
 </script>
 
-</body>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+async function startRazorpayPayment(reportType){
+  if(typeof currentData === "undefined" || !currentData){
+    alert("Please calculate your birth chart first.");
+    return;
+  }
+
+  const reportNames={
+    quick:"NAKSHIRA Quick Report",
+    complete:"NAKSHIRA Complete Report",
+    premium:"NAKSHIRA Premium Report"
+  };
+
+  try{
+    const orderResponse=await fetch("/api/create-order",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({report_type:reportType})
+    });
+
+    const order=await orderResponse.json();
+
+    if(!orderResponse.ok){
+      throw new Error(order.error||"Unable to create payment order.");
+    }
+
+    const options={
+      key:order.key_id,
+      amount:order.amount,
+      currency:order.currency,
+      name:"NAKSHIRA",
+      description:reportNames[reportType]||"NAKSHIRA Astrology Report",
+      order_id:order.order_id,
+      prefill:{
+        name:currentData.name||""
+      },
+      theme:{
+        color:"#8b5cf6"
+      },
+      handler:async function(response){
+        try{
+          const verifyResponse=await fetch("/api/verify-payment",{
+            method:"POST",
+            headers:{"Content-Type":"application/json"},
+            body:JSON.stringify({
+              razorpay_order_id:response.razorpay_order_id,
+              razorpay_payment_id:response.razorpay_payment_id,
+              razorpay_signature:response.razorpay_signature,
+              report_type:reportType
+            })
+          });
+
+          const verification=await verifyResponse.json();
+
+          if(!verifyResponse.ok || !verification.verified){
+            throw new Error(verification.error||"Payment verification failed.");
+          }
+
+          alert("Payment verified successfully. Your report is now unlocked.");
+          showSelectedReport(reportType==="quick"?1:reportType==="complete"?2:3);
+        }catch(error){
+          alert("Payment was received, but verification did not complete: "+error.message);
+        }
+      },
+      modal:{
+        ondismiss:function(){
+          console.log("Razorpay checkout closed.");
+        }
+      }
+    };
+
+    const rzp=new Razorpay(options);
+    rzp.on("payment.failed",function(response){
+      const message=response.error&&response.error.description
+        ?response.error.description
+        :"Payment failed. No report was unlocked.";
+      alert(message);
+    });
+    rzp.open();
+
+  }catch(error){
+    alert(error.message||"Unable to start payment.");
+  }
+}
+</script>\n</body>
 </html>
