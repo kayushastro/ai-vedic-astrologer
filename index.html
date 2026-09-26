@@ -1117,6 +1117,24 @@ footer{
 }
 </style>
 </style>
+
+<style id="nakshira-report-plans">
+.nak-plan-card{position:relative;overflow:hidden;display:flex;flex-direction:column;min-height:420px;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}
+.nak-plan-card:before{content:"";position:absolute;inset:-2px;background:radial-gradient(circle at 20% 0%,rgba(190,160,255,.16),transparent 42%),radial-gradient(circle at 100% 100%,rgba(255,196,92,.10),transparent 38%);pointer-events:none}
+.nak-plan-card>*{position:relative;z-index:1}
+.nak-plan-card:hover{transform:translateY(-8px);box-shadow:0 24px 60px rgba(0,0,0,.28)}
+.nak-plan-featured{border-color:rgba(170,135,255,.42);box-shadow:0 0 35px rgba(150,110,255,.10)}
+.nak-plan-premium{border-color:rgba(244,195,96,.48);box-shadow:0 0 45px rgba(244,195,96,.13)}
+.plan-icon{font-size:25px;margin-bottom:10px;opacity:.9}
+.plan-features{display:flex;flex-direction:column;gap:9px;margin:18px 0 24px;color:rgba(255,255,255,.76);font-size:13px;line-height:1.4;flex:1}
+.plan-features span{display:block}
+.nak-plan-card .price{font-size:46px;line-height:1;margin:10px 0 12px;font-weight:800;letter-spacing:-1.5px}
+.nak-plan-card .secondary-btn,.nak-plan-card .primary-btn{width:100%;display:flex;align-items:center;justify-content:center;gap:10px;padding:13px 16px}
+.nak-plan-card .secondary-btn span,.nak-plan-card .primary-btn span{font-size:18px;transition:transform .2s ease}
+.nak-plan-card button:hover span{transform:translateX(4px)}
+@media(max-width:760px){.nak-plan-card{min-height:auto}.nak-plan-card .price{font-size:40px}.plan-features{margin-bottom:20px}}
+</style>
+
 </head>
 
 <body>
@@ -1323,31 +1341,47 @@ footer{
 
     <div class="premium-grid">
 
-      <div class="price-card">
-        <div class="section-label">Quick Report</div>
+      <div class="price-card nak-plan-card">
+        <div class="plan-icon">✦</div>
+        <div class="section-label">QUICK REPORT</div>
         <div class="price">₹49</div>
-        <p class="muted">A focused personalized reading.</p>
-        <button class="secondary-btn" onclick="selectReport(1)">
-          Continue
-        </button>
+        <p class="muted">A focused personal reading for a quick cosmic snapshot.</p>
+        <div class="plan-features">
+          <span>✓ Personality insights</span>
+          <span>✓ Career & money themes</span>
+          <span>✓ Relationship insights</span>
+          <span>✓ Key chart highlights</span>
+        </div>
+        <button class="secondary-btn" onclick="selectReport(1)">Get Quick Report <span>→</span></button>
       </div>
 
-      <div class="price-card">
-        <div class="section-label">Complete Report</div>
+      <div class="price-card nak-plan-card nak-plan-featured">
+        <div class="plan-icon">◈</div>
+        <div class="section-label">COMPLETE REPORT</div>
         <div class="price">₹99</div>
-        <p class="muted">A deeper chart interpretation.</p>
-        <button class="secondary-btn" onclick="selectReport(2)">
-          Continue
-        </button>
+        <p class="muted">A deeper interpretation connecting the major areas of your birth chart.</p>
+        <div class="plan-features">
+          <span>✓ Everything in Quick</span>
+          <span>✓ Deeper chart interpretation</span>
+          <span>✓ Life-area analysis</span>
+          <span>✓ Practical guidance</span>
+        </div>
+        <button class="primary-btn" onclick="selectReport(2)">Get Complete Report <span>→</span></button>
       </div>
 
-      <div class="price-card featured">
-        <span class="badge">Premium</span>
+      <div class="price-card featured nak-plan-card nak-plan-premium">
+        <span class="badge">✦ PREMIUM</span>
+        <div class="plan-icon">☼</div>
+        <div class="section-label">PREMIUM REPORT</div>
         <div class="price">₹199</div>
-        <p class="muted">Dasha and timing analysis.</p>
-        <button class="primary-btn" onclick="selectReport(3)">
-          Continue
-        </button>
+        <p class="muted">The deepest NAKSHIRA analysis with Vimshottari Dasha and timing themes.</p>
+        <div class="plan-features">
+          <span>✓ Everything in Complete</span>
+          <span>✓ Vimshottari Dasha</span>
+          <span>✓ Current Mahadasha & Antardasha</span>
+          <span>✓ Upcoming timing timeline</span>
+        </div>
+        <button class="primary-btn" onclick="selectReport(3)">Unlock Premium <span>→</span></button>
       </div>
 
     </div>
