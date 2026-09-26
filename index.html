@@ -725,6 +725,397 @@ footer{
     white-space:nowrap;
   }
 }
+
+<style id="nakshira-2026-ui">
+/* NAKSHIRA 2026 — premium visual layer */
+
+:root{
+  --bg:#03040b;
+  --bg2:#080a18;
+  --panel:rgba(14,17,38,.78);
+  --line:rgba(255,255,255,.105);
+  --text:#f8f8ff;
+  --muted:#9da5c5;
+  --violet:#9b7cff;
+  --violet2:#675cff;
+  --gold:#f4cc72;
+  --cyan:#6ee7f9;
+}
+
+body{
+  background:
+    radial-gradient(900px 600px at 8% 4%,rgba(103,92,255,.22),transparent 65%),
+    radial-gradient(700px 520px at 92% 18%,rgba(155,124,255,.16),transparent 65%),
+    radial-gradient(800px 500px at 50% 100%,rgba(56,189,248,.07),transparent 65%),
+    linear-gradient(135deg,#02030a 0%,#070918 48%,#03040c 100%);
+}
+
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:1;
+  background:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:72px 72px;
+  mask-image:linear-gradient(to bottom,black,transparent 75%);
+}
+
+header{
+  max-width:1240px;
+  padding:24px 28px 10px;
+}
+
+.brand-mark{
+  width:46px;
+  height:46px;
+  border-radius:15px;
+  background:
+    radial-gradient(circle at 30% 25%,#fff 0 3%,transparent 4%),
+    linear-gradient(135deg,#a78bfa,#5b5cf0);
+  box-shadow:
+    0 10px 35px rgba(103,92,255,.32),
+    inset 0 1px 0 rgba(255,255,255,.35);
+}
+
+.brand-name{
+  font-size:20px;
+  letter-spacing:.19em;
+}
+
+.header-pill{
+  border-color:rgba(255,255,255,.12);
+  background:rgba(255,255,255,.055);
+  box-shadow:0 10px 35px rgba(0,0,0,.16);
+}
+
+main{
+  max-width:1240px;
+}
+
+.hero{
+  min-height:570px;
+  gap:60px;
+  padding:76px 0 72px;
+}
+
+.eyebrow{
+  border-color:rgba(244,204,114,.30);
+  background:linear-gradient(135deg,rgba(244,204,114,.10),rgba(155,124,255,.07));
+  box-shadow:0 10px 35px rgba(0,0,0,.12);
+}
+
+.hero h1{
+  font-size:clamp(50px,6.4vw,88px);
+  line-height:.94;
+  letter-spacing:-.065em;
+  margin:25px 0;
+}
+
+.hero-copy{
+  color:#aeb5d2;
+  font-size:19px;
+  max-width:640px;
+}
+
+.hero-actions button{
+  min-height:50px;
+  padding:14px 23px;
+}
+
+.primary-btn{
+  background:linear-gradient(135deg,#a78bfa 0%,#6d5df6 52%,#5750dc 100%);
+  box-shadow:
+    0 15px 45px rgba(91,82,235,.30),
+    inset 0 1px 0 rgba(255,255,255,.22);
+}
+
+.primary-btn:hover{
+  box-shadow:
+    0 20px 60px rgba(91,82,235,.45),
+    inset 0 1px 0 rgba(255,255,255,.28);
+}
+
+.secondary-btn{
+  background:rgba(255,255,255,.055);
+  border-color:rgba(255,255,255,.13);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.06);
+}
+
+.cosmic-orb{
+  width:min(480px,82vw);
+  filter:drop-shadow(0 30px 80px rgba(99,102,241,.12));
+}
+
+.cosmic-orb:before{
+  inset:4%;
+  border-color:rgba(139,92,246,.34);
+  box-shadow:0 0 80px rgba(99,102,241,.08);
+}
+
+.cosmic-orb:after{
+  inset:14%;
+  border-color:rgba(244,204,114,.24);
+}
+
+.orb-core{
+  width:45%;
+  background:
+    radial-gradient(circle at 32% 27%,#fff 0 2%,#ddd6fe 7%,#a78bfa 20%,#6655dc 36%,#29245f 58%,#080916 80%);
+  box-shadow:
+    0 0 55px rgba(139,92,246,.62),
+    0 0 150px rgba(99,102,241,.28),
+    inset 0 0 35px rgba(255,255,255,.10);
+}
+
+.card{
+  background:
+    linear-gradient(145deg,rgba(20,24,51,.82),rgba(7,9,22,.76));
+  border-color:rgba(255,255,255,.105);
+  border-radius:28px;
+  box-shadow:0 30px 100px rgba(0,0,0,.48);
+}
+
+.card:hover{
+  border-color:rgba(139,92,246,.20);
+}
+
+.form-card{
+  max-width:980px;
+  margin:-12px auto 80px;
+  padding:38px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(139,92,246,.11),transparent 30%),
+    linear-gradient(145deg,rgba(20,24,51,.90),rgba(7,9,22,.82));
+}
+
+.form-grid{
+  gap:20px;
+}
+
+.field label{
+  color:#d3d7ea;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  font-size:10px;
+}
+
+input{
+  min-height:52px;
+  border-radius:16px;
+  border-color:rgba(255,255,255,.105);
+  background:rgba(2,4,15,.72);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.025);
+}
+
+input:hover{
+  border-color:rgba(255,255,255,.17);
+}
+
+input:focus{
+  border-color:rgba(155,124,255,.85);
+  box-shadow:
+    0 0 0 4px rgba(139,92,246,.10),
+    0 0 40px rgba(99,102,241,.13);
+}
+
+.full-btn{
+  min-height:56px;
+  font-size:16px;
+}
+
+.stat{
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  border-color:rgba(255,255,255,.09);
+  min-height:102px;
+  transition:.25s ease;
+}
+
+.stat:hover{
+  transform:translateY(-3px);
+  border-color:rgba(139,92,246,.30);
+  box-shadow:0 15px 45px rgba(0,0,0,.20);
+}
+
+table{
+  border:1px solid rgba(255,255,255,.065);
+  border-radius:18px;
+  overflow:hidden;
+}
+
+th{
+  background:rgba(255,255,255,.035);
+}
+
+th,td{
+  padding:15px 14px;
+}
+
+tbody tr{
+  transition:.2s ease;
+}
+
+tbody tr:hover{
+  background:rgba(139,92,246,.045);
+}
+
+.chart .cell{
+  min-height:125px;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.05),rgba(255,255,255,.018));
+  border-color:rgba(255,255,255,.08);
+}
+
+.chart .cell:hover{
+  box-shadow:0 18px 45px rgba(0,0,0,.25);
+}
+
+.planet{
+  border:1px solid rgba(139,92,246,.14);
+  background:rgba(139,92,246,.13);
+}
+
+.premium{
+  border-color:rgba(244,204,114,.24);
+  background:
+    radial-gradient(circle at 100% 0%,rgba(244,204,114,.105),transparent 30%),
+    radial-gradient(circle at 0% 100%,rgba(139,92,246,.08),transparent 35%),
+    linear-gradient(145deg,rgba(28,25,51,.94),rgba(8,10,23,.84));
+  box-shadow:
+    0 30px 100px rgba(0,0,0,.46),
+    0 0 80px rgba(244,204,114,.035);
+}
+
+.premium h2{
+  color:#ffe8a8;
+}
+
+.premium-grid{
+  gap:18px;
+}
+
+.price-card{
+  padding:28px;
+  min-height:355px;
+  display:flex;
+  flex-direction:column;
+  background:
+    linear-gradient(145deg,rgba(255,255,255,.055),rgba(255,255,255,.018));
+  border-color:rgba(255,255,255,.10);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.price-card:hover{
+  transform:translateY(-7px);
+  border-color:rgba(139,92,246,.42);
+  box-shadow:0 25px 70px rgba(0,0,0,.36);
+}
+
+.price-card.featured{
+  border-color:rgba(244,204,114,.48);
+  background:
+    radial-gradient(circle at 90% 0%,rgba(244,204,114,.10),transparent 38%),
+    linear-gradient(145deg,rgba(42,35,60,.88),rgba(14,13,29,.82));
+  box-shadow:
+    0 0 55px rgba(244,204,114,.07),
+    inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+.price{
+  font-size:42px;
+  letter-spacing:-.04em;
+}
+
+.price-card p{
+  color:#b0b6d0;
+  min-height:42px;
+}
+
+.price-card ul{
+  flex:1;
+}
+
+.price-card button{
+  min-height:48px;
+}
+
+.badge{
+  box-shadow:0 8px 25px rgba(244,204,114,.08);
+}
+
+.modal{
+  background:rgba(1,2,9,.84);
+}
+
+.modal-box{
+  background:
+    radial-gradient(circle at 100% 0%,rgba(139,92,246,.13),transparent 32%),
+    linear-gradient(145deg,#171a38,#070916);
+  border-color:rgba(255,255,255,.14);
+  box-shadow:
+    0 40px 140px rgba(0,0,0,.72),
+    0 0 80px rgba(99,102,241,.08);
+}
+
+footer{
+  color:#737b9a;
+  padding-bottom:60px;
+}
+
+@media(max-width:850px){
+  .hero{
+    gap:30px;
+  }
+
+  .form-card{
+    margin-top:0;
+  }
+}
+
+@media(max-width:600px){
+  header{
+    padding:18px 16px 8px;
+  }
+
+  .brand-mark{
+    width:40px;
+    height:40px;
+  }
+
+  .brand-name{
+    font-size:17px;
+  }
+
+  main{
+    padding-left:14px;
+    padding-right:14px;
+  }
+
+  .hero h1{
+    font-size:48px;
+  }
+
+  .hero-copy{
+    font-size:16px;
+  }
+
+  .form-card{
+    padding:23px;
+  }
+
+  .price-card{
+    min-height:auto;
+  }
+
+  .modal-box{
+    padding:22px;
+    border-radius:22px;
+  }
+}
+</style>
 </style>
 </head>
 
