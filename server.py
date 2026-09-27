@@ -385,6 +385,31 @@ class Handler(BaseHTTPRequestHandler):
         path = urlparse(self.path).path
 
         # -------------------------------------------------
+        # NAKSHIRA AI chat endpoint
+        # -------------------------------------------------
+        if path == "/api/ai-chat":
+            try:
+                n = int(self.headers.get("Content-Length", "0"))
+                req = json.loads(self.rfile.read(n))
+                result = openai_ai_chat(
+                    req.get("question", ""),
+                    req.get("chart_data", {}),
+                    req.get("history", []),
+                )
+                self.send(
+                    200,
+                    json.dumps(result, ensure_ascii=False).encode("utf-8"),
+                    "application/json; charset=utf-8"
+                )
+            except Exception as e:
+                self.send(
+                    400,
+                    json.dumps({"ok": False, "error": str(e)}, ensure_ascii=False).encode("utf-8"),
+                    "application/json; charset=utf-8"
+                )
+            return
+
+        # -------------------------------------------------
         # Existing astrology chart endpoint
         # -------------------------------------------------
         if path == "/api/chart":

@@ -1141,6 +1141,19 @@ body:before{content:"";position:fixed;inset:-20%;pointer-events:none;z-index:0;b
 button{-webkit-tap-highlight-color:transparent}
 button:focus-visible{outline:2px solid rgba(155,124,255,.75);outline-offset:3px}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
+
+.ai-assistant{margin-top:24px;padding:24px;border-radius:24px;background:linear-gradient(135deg,rgba(30,20,60,.96),rgba(12,24,48,.96));border:1px solid rgba(139,92,246,.35);box-shadow:0 18px 50px rgba(0,0,0,.22)}
+.ai-assistant h3{margin:0 0 8px;font-size:1.35rem}
+.ai-assistant-subtitle{margin:0 0 16px;opacity:.78}
+.ai-chat-log{min-height:70px;max-height:360px;overflow:auto;margin:12px 0;padding:4px}
+.ai-message{padding:12px 14px;margin:10px 0;border-radius:16px;line-height:1.55;white-space:pre-wrap}
+.ai-user{margin-left:12%;background:rgba(139,92,246,.18)}
+.ai-bot{margin-right:12%;background:rgba(255,255,255,.07)}
+.ai-chat-row{display:flex;gap:10px}
+.ai-chat-input{flex:1;min-width:0;padding:13px 15px;border-radius:14px;border:1px solid rgba(255,255,255,.16);background:rgba(0,0,0,.2);color:inherit}
+.ai-chat-button{padding:13px 18px;border:0;border-radius:14px;cursor:pointer;font-weight:700}
+.ai-chat-button:disabled{opacity:.55;cursor:wait}
+
 </style>
 </style>
 
@@ -1744,6 +1757,7 @@ function render(d){ currentData = d;
  const ch=document.getElementById('chart'); ch.innerHTML='';
  for(let h=1;h<=12;h++){let planets=d.planets.filter(p=>p.house===h).map(p=>`<span class="planet">${p.short}</span>`).join('');ch.innerHTML+=`<div class="cell"><strong>House ${h}</strong><br>${d.houses[h-1]}<br>${planets||'<span class="muted">&mdash;</span>'}</div>`}
   document.getElementById('reading').innerHTML=buildReading(d);
+  renderAIAssistant();
 }
 function buildCompleteReport(d){
  const p=d.planets;
@@ -2093,5 +2107,86 @@ async function startRazorpayPayment(reportType){
     alert(error.message||"Unable to start payment.");
   }
 }
+
+function renderAIAssistant(){
+  const reading=document.getElementById("reading");
+  if(!reading || document.getElementById("nakshira-ai-assistant")) return;
+
+  reading.insertAdjacentHTML("beforeend",`
+    <section class="ai-assistant" id="nakshira-ai-assistant">
+      <h3>✨ Ask NAKSHIRA AI</h3>
+      <p class="ai-assistant-subtitle">Ask a personalized question about your calculated Vedic birth chart.</p>
+      <div class="ai-chat-log" id="ai-chat-log">
+        <div class="ai-message ai-bot">Your chart is ready. Ask me about career, relationships, finances, timing, planetary influences, or another topic in your chart.</div>
+      </div>
+      <div class="ai-chat-row">
+        <input class="ai-chat-input" id="ai-chat-input" maxlength="1200" placeholder="Ask NAKSHIRA AI a question..." autocomplete="off">
+        <button class="ai-chat-button" id="ai-chat-button" type="button">Ask AI</button>
+      </div>
+    </section>
+  `);
+
+  const input=document.getElementById("ai-chat-input");
+  const button=document.getElementById("ai-chat-button");
+  const log=document.getElementById("ai-chat-log");
+  const history=[];
+
+  const addMessage=(role,text)=>{
+    const div=document.createElement("div");
+    div.className="ai-message "+(role==="user"?"ai-user":"ai-bot");
+    div.textContent=text;
+    log.appendChild(div);
+    log.scrollTop=log.scrollHeight;
+  };
+
+  const ask=async()=>{
+    const question=input.value.trim();
+    if(!question) return;
+
+    addMessage("user",question);
+    history.push({role:"user",content:question});
+    input.value="";
+    button.disabled=true;
+    button.textContent="Thinking…";
+
+    try{
+      const r=await fetch("/api/ai-chat",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          question,
+          chart_data:currentData,
+          history
+        })
+      });
+
+      const data=await r.json();
+
+      if(!r.ok || !data.ok){
+        throw new Error(data.error||"AI request failed.");
+      }
+
+      addMessage("assistant",data.answer);
+      history.push({role:"assistant",content:data.answer});
+
+    }catch(error){
+      addMessage(
+        "assistant",
+        "I couldn't answer that right now. "+(error.message||"Please try again.")
+      );
+    }finally{
+      button.disabled=false;
+      button.textContent="Ask AI";
+      input.focus();
+    }
+  };
+
+  button.addEventListener("click",ask);
+
+  input.addEventListener("keydown",e=>{
+    if(e.key==="Enter") ask();
+  });
+}
+
 </script>\n</body>
 </html>
