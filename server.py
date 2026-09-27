@@ -19,6 +19,8 @@ import swisseph as swe
 RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID", "").strip()
 RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET", "").strip()
 RAZORPAY_WEBHOOK_SECRET = os.environ.get("RAZORPAY_WEBHOOK_SECRET", "").strip()
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", "").strip()
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", "gpt-5.6-luna").strip() or "gpt-5.6-luna"
 
 REPORT_PRICES = {
     "quick": 4900,
@@ -200,6 +202,40 @@ def nakshatra(lon):
     within=(lon%360)%(360/27)
     pada=int(within/(360/108))+1
     return NAK[idx],pada
+
+def openai_ai_chat(question, chart_data, history):
+    if not OPENAI_API_KEY:
+        raise ValueError("AI chat is not configured yet. Add OPENAI_API_KEY in Railway variables.")
+    question=str(question or "").strip()
+    if not question: raise ValueError("Please enter a question.")
+    if len(question)>1200: raise ValueError("Please keep your question under 1200 characters.")
+    if not isinstance(chart_data,dict): raise ValueError("Chart data is required. Please calculate the birth chart first.")
+    hist=history if isinstance(history,list) else []
+    hist=hist[-8:]
+    cj=json.dumps(chart_data,ensure_ascii=False,separators=(",",":"))
+    lines=[]
+    for x in hist:
+        if isinstance(x,dict) and str(x.get("role","")).lower() in ("user","assistant"):
+            lines.append(str(x.get("role","")).upper()+": "+str(x.get("content",""))[:2000])
+    ins=("You are NAKSHIRA AI, a chart-aware Vedic astrology assistant. Use only the supplied calculated sidereal Vedic chart for chart facts. Interpret using traditional Vedic astrology principles and distinguish interpretation from certainty. Never invent placements, houses, nakshatras, dashas, transits or birth details. If required data is missing, say so. For medical, legal or financial matters, give general information and do not present astrology as a substitute for qualified professional advice. Be warm, concise, practical and personalized.")
+    prompt="BIRTH CHART DATA:\n"+cj+"\n\nRECENT CHAT:\n"+("\n".join(lines) or "(none)")+"\n\nUSER QUESTION:\n"+question
+    payload={"model":OPENAI_MODEL,"instructions":ins,"input":prompt,"reasoning":{"effort":"low"},"max_output_tokens":700}
+    req=urllib.request.Request("https://api.openai.com/v1/responses",data=json.dumps(payload).encode(),headers={"Content-Type":"application/json","Authorization":"Bearer "+OPENAI_API_KEY},method="POST")
+    try:
+        with urllib.request.urlopen(req,timeout=60) as r: data=json.loads(r.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        raise ValueError("AI provider error: "+e.read().decode("utf-8",errors="replace")[:1000])
+    except urllib.error.URLError as e: raise ValueError("AI provider connection failed: "+str(e))
+    if data.get("error"): raise ValueError("AI provider error: "+str(data["error"])[:1000])
+    answer=str(data.get("output_text","")).strip()
+    if not answer:
+        parts=[]
+        for item in data.get("output",[]):
+            for c in item.get("content",[]) if isinstance(item,dict) else []:
+                if isinstance(c,dict) and c.get("type")=="output_text": parts.append(str(c.get("text","")))
+        answer="\n".join(parts).strip()
+    if not answer: raise ValueError("AI provider returned an empty response.")
+    return {"ok":True,"answer":answer,"model":OPENAI_MODEL}
 
 def chart(req):
     city_key=req.get("city")
